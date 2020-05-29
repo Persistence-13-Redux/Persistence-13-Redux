@@ -1,6 +1,6 @@
-# baystation12
+# Persistence Station 13 - Redux
 
-[Website](http://baystation12.net/) - [Code](http://github.com/Baystation12/Baystation12/) - [Discord](https://discord.baystation12.net/) - [IRC](https://kiwiirc.com/client/irc.sorcery.net/codershuttle): irc://irc.sorcery.net/#codershuttle
+[Code](https://github.com/Persistence-13-Redux/Persistence-13-Redux)
 
 ---
 
