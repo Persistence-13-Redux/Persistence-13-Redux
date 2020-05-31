@@ -48,6 +48,5 @@
 <!-- Don't forget to remove the space between the brackets, or it won't work! -->
 - [ ] Issue could be reproduced at least once
 - [ ] Issue could be reproduced by different players
-- [ ] Issue could be reproduced in multiple rounds
-- [ ] Issue happened in a recent (less than 7 days ago) round
-- [ ] [Couldn't find an existing issue about this](https://github.com/Baystation12/Baystation12/issues)
+- [ ] Issue happened recently (less than 7 days ago)
+- [ ] [Couldn't find an existing issue about this](https://github.com/Persistence-13-Redux/Persistence-13-Redux/issues)

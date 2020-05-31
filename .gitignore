@@ -48,3 +48,10 @@ lib/*.so
 # python
 *.pyc
 __pycache__
+
+persistence.code-workspace
+
+# ignore saved vars
+saved_vars/
+*.sav
+Save.txt
