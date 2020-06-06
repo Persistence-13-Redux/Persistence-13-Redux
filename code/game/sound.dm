@@ -54,6 +54,7 @@ GLOBAL_LIST_INIT(button_sound,list('sound/machines/button1.ogg','sound/machines/
 GLOBAL_LIST_INIT(chop_sound,list('sound/weapons/chop1.ogg','sound/weapons/chop2.ogg','sound/weapons/chop3.ogg'))
 GLOBAL_LIST_INIT(glasscrack_sound,list('sound/effects/glass_crack1.ogg','sound/effects/glass_crack2.ogg','sound/effects/glass_crack3.ogg','sound/effects/glass_crack4.ogg'))
 GLOBAL_LIST_INIT(tray_hit_sound,list('sound/items/trayhit1.ogg', 'sound/items/trayhit2.ogg'))
+GLOBAL_LIST_INIT(swing_miss_sound,list('sound/weapons/swing_miss1.ogg', 'sound/weapons/swing_miss2.ogg', 'sound/weapons/swing_miss3.ogg'))
 
 /proc/playsound(var/atom/source, soundin, vol as num, vary, extrarange as num, falloff, var/is_global, var/frequency, var/is_ambiance = 0)
 
@@ -190,4 +191,6 @@ var/const/FALLOFF_SOUNDS = 0.5
 			if ("chop") soundin = pick(GLOB.chop_sound)
 			if ("glasscrack") soundin = pick(GLOB.glasscrack_sound)
 			if ("tray_hit") soundin = pick(GLOB.tray_hit_sound)
+			if ("punch_miss") soundin = 'sound/weapons/punchmiss.ogg'
+			if ("swing_miss") soundin = pick(GLOB.swing_miss_sound)
 	return soundin

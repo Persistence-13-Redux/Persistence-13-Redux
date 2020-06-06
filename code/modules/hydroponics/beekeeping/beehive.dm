@@ -159,7 +159,7 @@
 	var/trays = 0
 	for(var/obj/machinery/portable_atmospherics/hydroponics/H in view(7, src))
 		if(H.seed && !H.dead)
-			H.health += 0.05 * coef
+			H.plant_health += 0.05 * coef
 			++trays
 	honeycombs = min(honeycombs + 0.1 * coef * min(trays, 5), frames * 100)
 
@@ -299,14 +299,9 @@ var/global/list/datum/stack_recipe/wax_recipes = list(
 	name = "beekeeping crate"
 	desc = "All you need to set up your own beehive."
 
-/obj/structure/closet/crate/hydroponics/beekeeping/New()
-	..()
-	new /obj/item/beehive_assembly(src)
-	new /obj/item/bee_smoker(src)
-	new /obj/item/honey_frame(src)
-	new /obj/item/honey_frame(src)
-	new /obj/item/honey_frame(src)
-	new /obj/item/honey_frame(src)
-	new /obj/item/honey_frame(src)
-	new /obj/item/bee_pack(src)
-	new /obj/item/weapon/crowbar(src)
+/obj/structure/closet/crate/hydroponics/beekeeping/WillContain()
+	return list(/obj/item/beehive_assembly = 1,
+		/obj/item/bee_smoker = 1,
+		/obj/item/honey_frame = 5,
+		/obj/item/bee_pack = 1,
+		/obj/item/weapon/crowbar = 1)

@@ -1,0 +1,5 @@
+/datum/lock/New(var/atom/h, var/complexity = 1)
+	..()
+	ADD_SAVED_VAR(status)
+	ADD_SAVED_VAR(lock_data)
+	ADD_SAVED_VAR(holder)

@@ -42,9 +42,9 @@
 	GLOB.silicon_mob_list += src
 	. = ..()
 
-	if(silicon_radio)
+	if(ispath(silicon_radio))
 		silicon_radio = new silicon_radio(src)
-	if(silicon_camera)
+	if(ispath(silicon_camera))
 		silicon_camera = new silicon_camera(src)
 
 	add_language(LANGUAGE_HUMAN_EURO)

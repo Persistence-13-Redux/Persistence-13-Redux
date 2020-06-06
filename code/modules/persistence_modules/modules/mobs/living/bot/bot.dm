@@ -1,0 +1,10 @@
+/mob/living/bot/New()
+	..()
+	ADD_SAVED_VAR(on)
+	ADD_SAVED_VAR(open)
+	ADD_SAVED_VAR(locked)
+	ADD_SAVED_VAR(emagged)
+	ADD_SAVED_VAR(connected_faction_uid)
+	ADD_SAVED_VAR(frustration)
+	ADD_SAVED_VAR(will_patrol)
+

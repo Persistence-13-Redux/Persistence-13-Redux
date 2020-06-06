@@ -83,11 +83,11 @@
 	if(texture)
 		overlays += texture
 	if(stripe_color)
-		for(var/i = 1 to 4)
+		for(var/i = 1 to other_connections.len)
 			if(other_connections[i] != "0")
-				I = image('icons/turf/wall_masks.dmi', "stripe_other[wall_connections[i]]", dir = 1<<(i-1))
+				I = image('icons/turf/wall_masks.dmi', "stripe_other[wall_connections[i]]", dir = GLOB.alldirs[i])
 			else
-				I = image('icons/turf/wall_masks.dmi', "stripe[wall_connections[i]]", dir = 1<<(i-1))
+				I = image('icons/turf/wall_masks.dmi', "stripe[wall_connections[i]]", dir = GLOB.alldirs[i])
 			I.color = stripe_color
 			overlays += I
 

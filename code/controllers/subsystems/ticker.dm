@@ -44,7 +44,7 @@ SUBSYSTEM_DEF(ticker)
 			post_game_tick()
 
 /datum/controller/subsystem/ticker/proc/pregame_tick()
-	if(start_ASAP)
+	if(start_ASAP || config.persistent_mode)
 		start_now()
 		return
 	if(round_progressing && last_fire)
@@ -212,6 +212,9 @@ Helpers
 			. = CHOOSE_GAMEMODE_RETRY //Worth it to try again at least once.
 		else
 			mode_to_try = "extended"
+
+	if(config.persistent_mode)
+		mode_to_try = "persistent" //force persistent mode
 
 	if(!mode_to_try)
 		return

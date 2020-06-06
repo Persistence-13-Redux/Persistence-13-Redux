@@ -1,0 +1,6 @@
+/obj/item/weapon/reagent_containers/hypospray/vial/New()
+	..()
+	ADD_SAVED_VAR(loaded_vial)
+/obj/item/weapon/reagent_containers/hypospray/autoinjector/New()
+	. = ..()
+	ADD_SAVED_VAR(band_color)

@@ -98,7 +98,7 @@
 	QDEL_NULL(parent)
 	QDEL_NULL(sound_token)
 	if(air_temporary)
-		loc.assume_air(air_temporary)
+		loc?.assume_air(air_temporary)
 
 	. = ..()
 

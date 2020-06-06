@@ -1,0 +1,11 @@
+/obj/machinery/computer/general_air_control/New()
+	. = ..()
+	ADD_SAVED_VAR(sensors)
+	ADD_SKIP_EMPTY(sensors)
+
+/obj/machinery/computer/air_control/fuel_injection/New()
+	. = ..()
+	ADD_SAVED_VAR(device_tag)
+	ADD_SAVED_VAR(automation)
+	ADD_SAVED_VAR(cutoff_temperature)
+	ADD_SAVED_VAR(on_temperature)

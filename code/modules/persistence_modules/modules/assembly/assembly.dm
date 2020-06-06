@@ -1,0 +1,6 @@
+/obj/item/device/assembly/New()
+	. = ..()
+	ADD_SAVED_VAR(secured)
+	ADD_SAVED_VAR(attached_overlays)
+	ADD_SAVED_VAR(holder)
+	ADD_SAVED_VAR(wires)

@@ -1,0 +1,10 @@
+/obj/effect/decal/cleanable/blood/New()
+	. = ..()
+	ADD_SAVED_VAR(viruses)
+	ADD_SAVED_VAR(basecolor)
+	ADD_SAVED_VAR(virus2)
+	ADD_SAVED_VAR(blood_DNA)
+
+	ADD_SKIP_EMPTY(viruses)
+	ADD_SKIP_EMPTY(blood_DNA)
+	ADD_SKIP_EMPTY(virus2)

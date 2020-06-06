@@ -101,21 +101,16 @@
 /obj/machinery/ntnet_relay/New()
 	uid = gl_uid
 	gl_uid++
-	if(ntnet_global)
-		ntnet_global.relays.Add(src)
-		NTNet = ntnet_global
-		ntnet_global.add_log("New quantum relay activated. Current amount of linked relays: [NTNet.relays.len]")
+	register_relay()
 	..()
 
 /obj/machinery/ntnet_relay/Destroy()
-	if(ntnet_global)
-		ntnet_global.relays.Remove(src)
-		ntnet_global.add_log("Quantum relay connection severed. Current amount of linked relays: [NTNet.relays.len]")
-		NTNet = null
+	unregister_relay()
+	NTNet = null
 	for(var/datum/computer_file/program/ntnet_dos/D in dos_sources)
 		D.target = null
 		D.error = "Connection to quantum relay severed"
-	..()
+	return ..()
 
 /obj/machinery/ntnet_relay/attackby(obj/item/P, mob/user)
 	if (!istype(P,/obj/item/weapon/stock_parts/computer/hard_drive/portable))
@@ -125,3 +120,16 @@
 	else if(user.unEquip(P,src))
 		install_component(P)
 		to_chat(user, "You install \the [P] into \the [src]")
+
+//Code ran at creation to register the relay
+/obj/machinery/ntnet_relay/register_relay()
+	if(ntnet_global)
+		ntnet_global.relays.Add(src)
+		NTNet = ntnet_global
+		ntnet_global.add_log("New quantum relay activated. Current amount of linked relays: [NTNet.relays.len]")
+
+//Code ran at destruction to unregister the relay
+/obj/machinery/ntnet_relay/unregister_relay()
+	if(ntnet_global)
+		ntnet_global.relays.Remove(src)
+		ntnet_global.add_log("Quantum relay connection severed. Current amount of linked relays: [NTNet.relays.len]")

@@ -12,7 +12,6 @@
 	var/welded
 
 /obj/structure/hygiene/drain/attackby(var/obj/item/thing, var/mob/user)
-	..()
 	if(isWelder(thing))
 		var/obj/item/weapon/weldingtool/WT = thing
 		if(WT.isOn())

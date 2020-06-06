@@ -50,14 +50,15 @@
 
 	//create an entry in the account transaction log for when it was created
 	//note that using the deposit proc on the account isn't really feasible because we need to change the transaction data before performing it
-	var/datum/transaction/singular/T = new(M, (source_db ? source_db.machine_id : "NTGalaxyNet Terminal #[rand(111,1111)]"), starting_funds, "Account creation")
+	var/datum/transaction/singular/T = new(M, (source_db ? source_db.machine_id : "NTGalaxyNet Terminal"), starting_funds, "Account creation")
 	if(!source_db)
-		//set a random date, time and location some time over the past few decades
-		T.date = "[num2text(rand(1,31))] [pick("January","February","March","April","May","June","July","August","September","October","November","December")], [game_year-rand(8,18)]"
-		T.time = "[rand(0,24)]:[rand(11,59)]"
+		T.date = stationdate2text()
+		T.time = stationtime2text()
+		T.purpose = "NTGalaxyNet Frontier Accounts"
 
 		M.account_number = random_id("station_account_number", 111111, 999999)
 	else
+		T.purpose = "NTGalaxyNet Frontier Accounts #[source_db.machine_id]"
 		M.account_number = next_account_number
 		next_account_number += rand(1,25)
 
@@ -88,7 +89,7 @@
 	//add the account
 	T.perform()
 	all_money_accounts.Add(M)
-
+	PSDB.bank.AddBankAccount(M) //Commit to db
 	return M
 
 //this returns the first account datum that matches the supplied accnum/pin combination, it returns null if the combination did not match any account
@@ -98,6 +99,12 @@
 		return D
 
 /proc/get_account(var/account_number)
-	for(var/datum/money_account/D in all_money_accounts)
+	var/datum/money_account/D
+	for(D in all_money_accounts)
 		if(D.account_number == account_number)
 			return D
+	D = PSDB.bank.GetBankAccountByID(account_number)
+	if(D)
+		all_money_accounts |= D //Add it to the cache
+	return D
+

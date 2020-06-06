@@ -1,0 +1,13 @@
+/obj/item/device/assembly/infra/New()
+	. = ..()
+	ADD_SAVED_VAR(on)
+	ADD_SAVED_VAR(visible)
+	ADD_SAVED_VAR(beams)
+	ADD_SAVED_VAR(seen_turfs)
+	ADD_SAVED_VAR(proximity_trigger)
+	ADD_SKIP_EMPTY(proximity_trigger)
+
+/obj/item/device/assembly/infra/Initialize()
+	. = ..()
+	if(!map_storage_loaded)
+		proximity_trigger = new(src, /obj/item/device/assembly/infra/proc/on_beam_entered, /obj/item/device/assembly/infra/proc/on_visibility_change, world.view, PROXIMITY_EXCLUDE_HOLDER_TURF)

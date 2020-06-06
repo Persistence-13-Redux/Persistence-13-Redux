@@ -18,7 +18,7 @@ var/list/organ_cache = list()
 	// Reference data.
 	var/mob/living/carbon/human/owner // Current mob owning the organ.
 	var/datum/dna/dna                 // Original DNA.
-	var/datum/species/species         // Original species.
+	var/tmp/datum/species/species     // Original species.
 
 	// Damage vars.
 	var/damage = 0                    // Current damage to the organ

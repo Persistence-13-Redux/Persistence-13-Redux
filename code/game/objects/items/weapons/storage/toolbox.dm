@@ -30,9 +30,9 @@
 
 /obj/item/weapon/storage/toolbox/emergency/Initialize()
 	. = ..()
-	var/item = pick(list(/obj/item/device/flashlight, /obj/item/device/flashlight/flare,  /obj/item/device/flashlight/flare/glowstick/red))
-	new item(src)
-
+	if(!map_storage_loaded)
+		var/item = pick(list(/obj/item/device/flashlight, /obj/item/device/flashlight/flare,  /obj/item/device/flashlight/flare/glowstick/red))
+		new item(src)
 
 /obj/item/weapon/storage/toolbox/mechanical
 	name = "mechanical toolbox"
@@ -50,12 +50,13 @@
 
 /obj/item/weapon/storage/toolbox/electrical/Initialize()
 	. = ..()
-	new /obj/item/stack/cable_coil/random(src,30)
-	new /obj/item/stack/cable_coil/random(src,30)
-	if(prob(5))
-		new /obj/item/clothing/gloves/insulated(src)
-	else
+	if(!map_storage_loaded)
 		new /obj/item/stack/cable_coil/random(src,30)
+		new /obj/item/stack/cable_coil/random(src,30)
+		if(prob(5))
+			new /obj/item/clothing/gloves/insulated(src)
+		else
+			new /obj/item/stack/cable_coil/random(src,30)
 
 /obj/item/weapon/storage/toolbox/syndicate
 	name = "black and red toolbox"

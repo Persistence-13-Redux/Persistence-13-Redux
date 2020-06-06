@@ -1,0 +1,7 @@
+#define EMPLOYMENT_STATUS_EMPLOYED "Employed"
+#define EMPLOYMENT_STATUS_SUSPENDED "Suspended"
+#define EMPLOYMENT_STATUS_FIRED "Fired"
+#define EMPLOYMENT_STATUS_UNEMPLOYED "Unemployed"
+
+#define WORK_STATUS_ON_DUTY "On Duty"
+#define WORK_STATUS_OFF_DUTY "Off Duty"

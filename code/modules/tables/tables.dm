@@ -249,7 +249,7 @@
 /obj/structure/table/proc/remove_material(obj/item/weapon/wrench/W, mob/user)
 	material = common_material_remove(user, material, 20, "plating", "bolts", 'sound/items/Ratchet.ogg')
 
-/obj/structure/table/proc/dismantle(obj/item/weapon/wrench/W, mob/user)
+/obj/structure/table/dismantle(obj/item/weapon/wrench/W, mob/user)
 	reset_mobs_offset()
 	if(manipulating) return
 	manipulating = 1

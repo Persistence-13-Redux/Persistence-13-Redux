@@ -69,7 +69,7 @@
 		if(!skip_icon_update)
 			update_icon()
 
-/obj/structure/noticeboard/proc/dismantle()
+/obj/structure/noticeboard/dismantle()
 	for(var/thing in notices)
 		remove_paper(thing, skip_icon_update = TRUE)
 	new /obj/item/stack/material(get_turf(src), 10, MATERIAL_WOOD)

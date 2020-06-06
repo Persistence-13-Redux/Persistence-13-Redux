@@ -246,6 +246,7 @@
 			to_chat(user, "You repair all structural damage to \the [src]")
 			damage = 0
 		return TRUE
+	return ..()
 
 /obj/machinery/power/smes/ui_interact(mob/user, ui_key = "main", var/datum/nanoui/ui = null, var/force_open = 1)
 	// this is the data which will be sent to the ui

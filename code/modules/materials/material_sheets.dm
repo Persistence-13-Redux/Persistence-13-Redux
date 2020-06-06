@@ -19,15 +19,19 @@
 
 /obj/item/stack/material/Initialize(mapload, var/amount, var/_material, var/_reinf_material)
 	. = ..()
-	if(_material)
-		default_type = _material
-	if(_reinf_material)
-		default_reinf_type = _reinf_material
+	if(!map_storage_loaded)
+		if(_material)
+			default_type = _material
+		if(_reinf_material)
+			default_reinf_type = _reinf_material
 	material = SSmaterials.get_material_by_name(default_type)
 	if(!material)
+		log_warning(" /obj/item/stack/material/Initialize() : Missing or invalid material type ([default_type])!")
 		return INITIALIZE_HINT_QDEL
 	if(default_reinf_type)
 		reinf_material = SSmaterials.get_material_by_name(default_reinf_type)
+		if(!reinf_material)
+			log_warning(" /obj/item/stack/material/Initialize() : Missing or invalid reinf_material type([default_reinf_type])!")
 	base_state = icon_state
 	
 	if(!stacktype)
@@ -52,7 +56,7 @@
 /obj/item/stack/material/get_codex_value()
 	return (material && !material.hidden_from_codex) ? "[lowertext(material.display_name)] (material)" : ..()
 
-/obj/item/stack/material/proc/set_amount(var/_amount)
+/obj/item/stack/material/set_amount(var/_amount)
 	amount = max(1, min(_amount, max_amount))
 	update_strings()
 

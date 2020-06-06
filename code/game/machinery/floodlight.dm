@@ -37,7 +37,7 @@
 				set_light(l_max_bright, l_inner_range, l_outer_range)
 
 // Returns 0 on failure and 1 on success
-/obj/machinery/floodlight/proc/turn_on(var/loud = 0)
+/obj/machinery/floodlight/turn_on(var/loud = 0)
 	if(stat & NOPOWER)
 		return 0
 
@@ -50,7 +50,7 @@
 		playsound(src.loc, 'sound/effects/flashlight.ogg', 50, 0)
 	return 1
 
-/obj/machinery/floodlight/proc/turn_off(var/loud = 0)
+/obj/machinery/floodlight/turn_off(var/loud = 0)
 	set_light(0, 0)
 	update_use_power(POWER_USE_OFF)
 	update_icon()

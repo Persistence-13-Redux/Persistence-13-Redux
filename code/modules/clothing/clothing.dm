@@ -308,6 +308,7 @@ BLIND     // can't see anything
 
 		cut_fingertops() // apply change, so relevant xenos can wear these
 		return
+	return ..()
 
 // Applies "clipped" and removes relevant restricted species from the list,
 // making them wearable by the specified species, does nothing if already cut
@@ -618,6 +619,7 @@ BLIND     // can't see anything
 	else
 		add_hidden(I, user)
 		return
+	return ..()
 
 /obj/item/clothing/shoes/proc/add_cuffs(var/obj/item/weapon/handcuffs/cuffs, var/mob/user)
 	if (!can_add_cuffs)

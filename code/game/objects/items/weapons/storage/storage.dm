@@ -30,7 +30,8 @@
 	var/open_sound = null
 
 /obj/item/weapon/storage/Destroy()
-	QDEL_NULL(storage_ui)
+	if(isobj(storage_ui)) //Don't try to delete a type path
+		QDEL_NULL(storage_ui)
 	. = ..()
 
 /obj/item/weapon/storage/MouseDrop(obj/over_object as obj)
@@ -97,6 +98,10 @@
 	storage_ui.show_to(user)
 
 /obj/item/weapon/storage/proc/prepare_ui()
+	if(ispath(storage_ui))
+		storage_ui = new storage_ui(src)
+	if(!storage_ui || !istype(storage_ui))
+		storage_ui = new()
 	storage_ui.prepare_ui()
 
 /obj/item/weapon/storage/proc/close(mob/user as mob)
@@ -354,7 +359,7 @@
 	storage_ui = new storage_ui(src)
 	prepare_ui()
 
-	if(startswith)
+	if(!map_storage_loaded && startswith)
 		for(var/item_path in startswith)
 			var/list/data = startswith[item_path]
 			if(islist(data))

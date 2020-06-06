@@ -1,0 +1,1 @@
+/obj/effect/gibspawner/should_save = 0

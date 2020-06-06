@@ -19,7 +19,7 @@
 	if(spawn_reagent)
 		reagents.add_reagent(spawn_reagent, volume)
 		var/datum/reagent/R = spawn_reagent
-		setLabel(initial(R.name))
+		set_label(null, initial(R.name))
 
 /obj/item/weapon/reagent_containers/chem_disp_cartridge/examine(mob/user)
 	. = ..()
@@ -36,20 +36,21 @@
 	set category = "Object"
 	set src in view(usr, 1)
 
-	setLabel(L, usr)
+	set_label(usr, L)
 
-/obj/item/weapon/reagent_containers/chem_disp_cartridge/proc/setLabel(L, mob/user = null)
-	if(L)
-		if(user)
-			to_chat(user, "<span class='notice'>You set the label on \the [src] to '[L]'.</span>")
+// /obj/item/weapon/reagent_containers/chem_disp_cartridge/proc/setLabel(L, mob/user = null)
+// 	set_label(user, L)
+// 	// if(L)
+// 	// 	if(user)
+// 	// 		to_chat(user, "<span class='notice'>You set the label on \the [src] to '[L]'.</span>")
 
-		label = L
-		SetName("[initial(name)] - '[L]'")
-	else
-		if(user)
-			to_chat(user, "<span class='notice'>You clear the label on \the [src].</span>")
-		label = ""
-		SetName(initial(name))
+// 	// 	label = L
+// 	// 	SetName("[initial(name)] - '[L]'")
+// 	// else
+// 	// 	if(user)
+// 	// 		to_chat(user, "<span class='notice'>You clear the label on \the [src].</span>")
+// 	// 	label = ""
+// 	// 	SetName(initial(name))
 
 /obj/item/weapon/reagent_containers/chem_disp_cartridge/attack_self()
 	..()
@@ -61,10 +62,11 @@
 		atom_flags |= ATOM_FLAG_OPEN_CONTAINER
 
 /obj/item/weapon/reagent_containers/chem_disp_cartridge/afterattack(obj/target, mob/user , flag)
+	var/obj/structure/reagent_dispensers/D = target
 	if (!is_open_container() || !flag)
 		return
 
-	else if(istype(target, /obj/structure/reagent_dispensers)) //A dispenser. Transfer FROM it TO us.
+	else if(istype(target, /obj/structure/reagent_dispensers) && !D.can_fill) //A dispenser. Transfer FROM it TO us only if the cap isn't open.
 		target.add_fingerprint(user)
 
 		if(!target.reagents.total_volume && target.reagents)

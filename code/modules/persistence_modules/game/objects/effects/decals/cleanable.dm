@@ -1,0 +1,6 @@
+/obj/effect/decal/cleanable/New()
+	. = ..()
+	ADD_SAVED_VAR(age)
+	ADD_SAVED_VAR(scent_intensity)
+	ADD_SAVED_VAR(scent_descriptor)
+	ADD_SAVED_VAR(scent_range)

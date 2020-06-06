@@ -3,18 +3,18 @@ var/global/datum/ntnet/ntnet_global = new()
 
 // This is the NTNet datum. There can be only one NTNet datum in game at once. Modular computers read data from this.
 /datum/ntnet/
-	var/list/relays = list()
+	var/tmp/list/relays = list()
 	var/list/logs = list()
-	var/list/available_station_software = list()
-	var/list/available_software_by_category = list()
-	var/list/available_antag_software = list()
-	var/list/available_news = list()
-	var/list/chat_channels = list()
-	var/list/fileservers = list()
-	var/list/email_accounts = list()				// I guess we won't have more than 999 email accounts active at once in single round, so this will do until Servers are implemented someday.
-	var/list/available_reports = list()             // A list containing one of each available report datums, used for the report editor program.
+	var/tmp/list/available_station_software = list()
+	var/tmp/list/available_software_by_category = list()
+	var/tmp/list/available_antag_software = list()
+	var/tmp/list/available_news = list()
+	var/tmp/list/chat_channels = list()
+	var/tmp/list/fileservers = list()
+	var/tmp/list/email_accounts = list()				// I guess we won't have more than 999 email accounts active at once in single round, so this will do until Servers are implemented someday.
+	var/tmp/list/available_reports = list()             // A list containing one of each available report datums, used for the report editor program.
 	var/list/banned_nids = list()
-	var/list/registered_nids = list()				// list of nid - os datum pairs
+	var/tmp/list/registered_nids = list()				// list of nid - os datum pairs
 	// Amount of logs the system tries to keep in memory. Keep below 999 to prevent byond from acting weirdly.
 	// High values make displaying logs much laggier.
 	var/setting_maxlogcount = 100
@@ -27,7 +27,7 @@ var/global/datum/ntnet/ntnet_global = new()
 	var/setting_disabled = 0					// Setting to 1 will disable all wireless, independently on relays status.
 
 	var/intrusion_detection_enabled = 1 		// Whether the IDS warning system is enabled
-	var/intrusion_detection_alarm = 0			// Set when there is an IDS warning due to malicious (antag) software.
+	var/tmp/intrusion_detection_alarm = 0			// Set when there is an IDS warning due to malicious (antag) software.
 
 
 // If new NTNet datum is spawned, it replaces the old one.

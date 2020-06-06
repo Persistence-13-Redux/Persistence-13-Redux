@@ -1,0 +1,13 @@
+/obj/item/organ/internal/posibrain/New(var/mob/living/carbon/H)
+	..()
+	ADD_SAVED_VAR(brainmob)
+	ADD_SAVED_VAR(shackle)
+
+/obj/item/organ/internal/posibrain/Initialize(var/mapload, var/mob/living/carbon/H)
+	. = ..()
+	if(!mapload)
+		if(!brainmob && H)
+			init(H)
+		robotize()
+		unshackle()
+	queue_icon_update()

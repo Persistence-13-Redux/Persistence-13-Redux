@@ -32,10 +32,11 @@
 
 /obj/item/weapon/gun/energy/Initialize()
 	. = ..()
-	if(cell_type)
-		power_supply = new cell_type(src)
-	else
-		power_supply = new /obj/item/weapon/cell/device/variable(src, max_shots*charge_cost)
+	if(!map_storage_loaded)
+		if(cell_type)
+			power_supply = new cell_type(src,max_shots*charge_cost)
+		else
+			power_supply = new /obj/item/weapon/cell/device/variable(src, max_shots*charge_cost)
 	if(self_recharge)
 		START_PROCESSING(SSobj, src)
 	update_icon()
@@ -78,14 +79,12 @@
 
 /obj/item/weapon/gun/energy/examine(mob/user)
 	. = ..(user)
-	if(!power_supply)
-		to_chat(user, "Seems like it's dead.")
-		return
-	if (charge_cost == 0)
-		to_chat(user, "This gun seems to have an unlimited number of shots.")
-	else
+	if(power_supply)
 		var/shots_remaining = round(power_supply.charge / charge_cost)
 		to_chat(user, "Has [shots_remaining] shot\s remaining.")
+	else
+		to_chat(usr, "Has no power source inserted.")
+	return
 
 /obj/item/weapon/gun/energy/on_update_icon()
 	..()

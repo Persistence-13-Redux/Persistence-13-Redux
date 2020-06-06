@@ -108,7 +108,7 @@
 		amount = min(amount, 4)
 		
 		if(amount == 0) // If the beaker is full, ping
-			if(prob(5)) visible_message("\The [src] pings.")
+			if(prob(5)) audible_message("\The [src] pings.")
 			return
 
 		if(!attached.should_have_organ(BP_HEART))
@@ -116,7 +116,7 @@
 
 		// If the human is losing too much blood, beep.
 		if(attached.get_blood_volume() < BLOOD_VOLUME_SAFE * 1.05)
-			visible_message("\The [src] beeps loudly.")
+			audible_message("\The [src] beeps loudly.")
 
 		if(attached.take_blood(beaker,amount))
 			queue_icon_update()

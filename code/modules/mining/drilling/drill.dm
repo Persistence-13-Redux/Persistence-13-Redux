@@ -22,18 +22,18 @@
 	var/list/resource_field = list()
 
 	var/ore_types = list(
-		MATERIAL_IRON     = /obj/item/weapon/ore/iron,
-		MATERIAL_URANIUM =  /obj/item/weapon/ore/uranium,
-		MATERIAL_GOLD =     /obj/item/weapon/ore/gold,
-		MATERIAL_SILVER =   /obj/item/weapon/ore/silver,
-		MATERIAL_DIAMOND =  /obj/item/weapon/ore/diamond,
-		MATERIAL_PHORON =   /obj/item/weapon/ore/phoron,
-		MATERIAL_OSMIUM =   /obj/item/weapon/ore/osmium,
-		MATERIAL_HYDROGEN = /obj/item/weapon/ore/hydrogen,
-		MATERIAL_SAND =     /obj/item/weapon/ore/glass,
-		MATERIAL_GRAPHITE = /obj/item/weapon/ore/coal,
-		MATERIAL_ALUMINIUM = /obj/item/weapon/ore/aluminium,
-		MATERIAL_RUTILE = /obj/item/weapon/ore/rutile
+		MATERIAL_IRON     = /obj/item/stack/ore/iron,
+		MATERIAL_URANIUM =  /obj/item/stack/ore/uranium,
+		MATERIAL_GOLD =     /obj/item/stack/ore/gold,
+		MATERIAL_SILVER =   /obj/item/stack/ore/silver,
+		MATERIAL_DIAMOND =  /obj/item/stack/ore/diamond,
+		MATERIAL_PHORON =   /obj/item/stack/ore/phoron,
+		MATERIAL_OSMIUM =   /obj/item/stack/ore/osmium,
+		MATERIAL_HYDROGEN = /obj/item/stack/ore/hydrogen,
+		MATERIAL_SAND =     /obj/item/stack/ore/glass,
+		MATERIAL_GRAPHITE = /obj/item/stack/ore/graphite,
+		MATERIAL_ALUMINIUM = /obj/item/stack/ore/aluminium,
+		MATERIAL_RUTILE = /obj/item/stack/ore/rutile
 		)
 
 	//Upgrades
@@ -128,8 +128,9 @@
 					harvesting.resources[metal] = 0
 
 				for(var/i=1, i <= create_ore, i++)
-					var/oretype = ore_types[metal]
-					new oretype(src)
+					var/obj/item/stack/ore/st = new(src, 1, metal)
+					st.drop_to_stacks(src)
+					SSasteroid.agitate(src, st.get_material()?.asteroid_anger)
 
 		if(!found_resource)
 			harvesting.has_resources = 0

@@ -137,6 +137,28 @@
 
 	START_PROCESSING(SSobj, src)
 
+	if(!map_storage_loaded)
+		create_initial_parts() //Don't create duplicates
+
+	for(var/obj/item/piece in list(gloves,helmet,boots,chest))
+		if(!istype(piece))
+			continue
+		piece.canremove = 0
+		piece.name = "[suit_type] [initial(piece.name)]"
+		piece.desc = "It seems to be part of a [src.name]."
+		piece.icon_state = "[initial(icon_state)]"
+		piece.min_cold_protection_temperature = min_cold_protection_temperature
+		piece.max_heat_protection_temperature = max_heat_protection_temperature
+		if(piece.siemens_coefficient > siemens_coefficient) //So that insulated gloves keep their insulation.
+			piece.siemens_coefficient = siemens_coefficient
+		piece.permeability_coefficient = permeability_coefficient
+		piece.unacidable = unacidable
+		if(islist(armor)) piece.armor = armor.Copy()
+
+	set_slowdown_and_vision(!offline)
+	queue_icon_update(1)
+
+/obj/item/weapon/rig/proc/create_initial_parts()
 	if(initial_modules && initial_modules.len)
 		for(var/path in initial_modules)
 			var/obj/item/rig_module/module = new path(src)

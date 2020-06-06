@@ -1,0 +1,6 @@
+/obj/machinery/washing_machine/New()
+	. = ..()
+	ADD_SAVED_VAR(state)
+	ADD_SAVED_VAR(gibs_ready)
+	ADD_SAVED_VAR(crayon)
+	ADD_SAVED_VAR(detergent)

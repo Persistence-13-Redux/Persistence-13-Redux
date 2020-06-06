@@ -264,6 +264,10 @@ proc/blood_splatter(var/target,var/datum/reagent/blood/source,var/large,var/spra
 		else
 			B.blood_DNA[source.data["blood_DNA"]] = "O+"
 
+	// Update virus information.
+	if(source.data["virus2"])
+		B.virus2 = virus_copylist(source.data["virus2"])
+
 	B.fluorescent  = 0
 	B.set_invisibility(0)
 	return B

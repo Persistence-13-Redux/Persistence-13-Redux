@@ -30,6 +30,10 @@ jobs:
       env: TEST=MAP MAP_PATH=bearcat
     - name: "Map - Away Sites"
       env: TEST=MAP MAP_PATH=away_sites_testing
+    - name: "Map - Nexus"
+      env: TEST=MAP MAP_PATH=nexus
+    - name: "Map - Fringe"
+      env: TEST=MAP MAP_PATH=fringe
 
 cache:
   directories:

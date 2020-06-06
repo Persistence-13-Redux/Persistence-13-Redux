@@ -36,7 +36,7 @@
 	if(!.)
 		return
 
-	if(stat != DEAD)
+	if (stat != DEAD && src.species && !(src.species.species_flags & SPECIES_FLAG_NO_HUNGER))
 
 		if((MUTATION_FAT in src.mutations) && (move_intent.flags & MOVE_INTENT_EXERTIVE) && src.bodytemperature <= 360)
 			bodytemperature += 2

@@ -1,0 +1,1 @@
+/obj/item/weapon/storage/briefcase/crimekit/empty/startswith = null

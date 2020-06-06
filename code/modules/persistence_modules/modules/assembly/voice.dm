@@ -1,0 +1,5 @@
+/obj/item/device/assembly/voice/New()
+	..()
+	ADD_SAVED_VAR(listening)
+	ADD_SAVED_VAR(recorded)
+	ADD_SKIP_EMPTY(recorded)

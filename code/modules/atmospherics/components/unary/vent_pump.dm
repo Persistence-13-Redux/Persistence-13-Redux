@@ -2,7 +2,7 @@
 
 #define EXTERNAL_PRESSURE_BOUND ONE_ATMOSPHERE
 #define INTERNAL_PRESSURE_BOUND 0
-#define PRESSURE_CHECKS 1
+#define PRESSURE_CHECKS PRESSURE_CHECK_EXTERNAL | PRESSURE_CHECK_INTERNAL
 
 #define PRESSURE_CHECK_EXTERNAL 1
 #define PRESSURE_CHECK_INTERNAL 2
@@ -330,6 +330,7 @@
 				"You hear a ratchet.")
 			new /obj/item/pipe(loc, src)
 			qdel(src)
+			return 1
 	if(isMultitool(W))
 		var/datum/browser/popup = new(user, "Vent Configuration Utility", "[src] Configuration Panel", 600, 200)
 		popup.set_content(jointext(get_console_data(),"<br>"))

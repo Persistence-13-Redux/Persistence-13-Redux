@@ -121,3 +121,7 @@
 	if(part)
 		part.implants.Remove(src)
 	return ..()
+
+//Get the actual owner mob of the implant
+/obj/item/weapon/implant/get_mob()
+	return part?.owner

@@ -163,7 +163,7 @@
 	padding_material = SSmaterials.get_material_by_name(padding_type)
 	update_icon()
 
-/obj/structure/bed/proc/dismantle()
+/obj/structure/bed/dismantle()
 	material.place_sheet(get_turf(src))
 	if(padding_material)
 		padding_material.place_sheet(get_turf(src))

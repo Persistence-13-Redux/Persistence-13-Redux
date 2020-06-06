@@ -1,0 +1,1 @@
+GLOBAL_LIST_EMPTY(latejoin_frontier_beacon)

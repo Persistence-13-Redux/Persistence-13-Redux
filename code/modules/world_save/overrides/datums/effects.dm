@@ -1,0 +1,1 @@
+/atom/movable/lighting_overlay/should_save = FALSE

@@ -211,14 +211,15 @@
 	anchored = 1
 	layer = RUNE_LAYER
 
-/obj/structure/stairs/Initialize()
+/obj/structure/stairs/Initialize(var/mapload)
 	for(var/turf/turf in locs)
 		var/turf/simulated/open/above = GetAbove(turf)
 		if(!above)
 			warning("Stair created without level above: ([loc.x], [loc.y], [loc.z])")
 			return INITIALIZE_HINT_QDEL
-		if(!istype(above))
-			above.ChangeTurf(/turf/simulated/open)
+		//Don't do that, it can be exploited to get into places
+		// if(!istype(above))
+		// 	above.ChangeTurf(/turf/simulated/open)
 	. = ..()
 
 /obj/structure/stairs/CheckExit(atom/movable/mover as mob|obj, turf/target as turf)

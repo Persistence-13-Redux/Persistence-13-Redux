@@ -427,3 +427,9 @@ RADIATION_LOWER_LIMIT 0.15
 ## clients will still download from the server *too*. This will randomly select one URL if more than one is provided.
 ## Spaces are prohibited in each URL by spec, you must use encoded spaces.
 #RESOURCE_URLS URL URL2 URL3
+
+## Uncomment to change the in-game year as the number of years from the current real year
+# YEAR_SKIP 420
+
+## Uncomment to change the in-game timezone relative to GMT
+# TIME_ZONE -5

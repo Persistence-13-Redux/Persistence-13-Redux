@@ -129,7 +129,7 @@
 
 /obj/item/organ/internal/lungs/proc/handle_breath(datum/gas_mixture/breath, var/forced)
 
-	if(!owner)
+	if(!owner || !loc)
 		return 1
 
 	if(!breath || (max_damage <= 0))

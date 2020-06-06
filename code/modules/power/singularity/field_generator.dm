@@ -170,13 +170,13 @@ field_generator power level display
 
 
 
-/obj/machinery/field_generator/proc/turn_off()
+/obj/machinery/field_generator/turn_off()
 	active = 0
 	spawn(1)
 		src.cleanup()
 	update_icon()
 
-/obj/machinery/field_generator/proc/turn_on()
+/obj/machinery/field_generator/turn_on()
 	active = 1
 	warming_up = 1
 	spawn(1)

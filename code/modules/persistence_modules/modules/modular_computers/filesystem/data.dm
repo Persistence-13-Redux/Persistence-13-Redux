@@ -1,0 +1,6 @@
+/datum/computer_file/data/New(list/md)
+	. = ..()
+	ADD_SAVED_VAR(stored_data)
+	ADD_SAVED_VAR(block_size)
+	ADD_SAVED_VAR(do_not_edit)
+	ADD_SAVED_VAR(read_only)

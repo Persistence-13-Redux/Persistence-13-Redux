@@ -1,0 +1,71 @@
+<!--
+	Interface for vending machines
+	See: code/game/machinery/vending.dm
+-->
+
+{{if data.mode == 0}} <!-- Listing -->
+{{if !data.locked}}
+	<div class='item'>Linked business: {{:data.faction_name}} &#40;UID:&quot;{{:data.faction_UID}}&quot;&#41;</div>
+	<div class='item'><span class='bad'>Maintenance mode active! Swipe your card again to lock!</span></div>
+{{/if}}
+<h3>Machine operated by: {{:data.faction_name}}</h3>
+<h2>Items available</h2>
+<div class='item'>
+	{{for data.products}}
+	<div class='item'>
+			<div style='float'>
+				{{if value.price > 0}}
+					{{:helper.link('Buy (' + value.price + ')', 'cart', { "vend" : value.key }, value.amount > 0 ? null : 'disabled')}}
+				{{else}}
+					{{:helper.link('Vend', 'circle-arrow-s', { "vend" : value.key }, value.amount > 0 ? null : 'disabled')}}
+				{{/if}}
+			</div>
+		<div class='itemContent'>
+		{{if value.color}}<span style='color:{{:value.color}}'>{{:value.name}}</span>
+		{{else}}{{:value.name}}
+		{{/if}}
+			 ({{:value.amount ? value.amount : "NONE LEFT"}}{{if !data.locked}}&#47;{{:data.max_single}}{{/if}}){{if !data.locked}}{{:helper.link('Price', 'tag', { "set_price" : value.key })}} {{:helper.link('Name', 'pencil', { "set_name" : value.key })}} {{:helper.link('Clear/Eject', 'trash', { "flush_product" : value.key })}}{{/if}}
+		</div>
+	</div>
+	{{empty}}
+	No items available!
+	{{/for}}
+</div>
+{{if data.coin}}
+<h2>Coin</h2>
+<div class='item'>
+	<div class='itemLabel'>Coin deposited:</div>
+	<div class='itemContent'>{{:helper.link(data.coin, 'eject', {'remove_coin' : 1})}}</div>
+</div>
+{{/if}}
+{{else data.mode == 1}} <!-- Payment screen -->
+<h2>Item selected</h2>
+<div class='item'>
+	<div class='item'>
+		<div class='itemLabel'>Item selected:</div> <div class='itemContent'>{{:data.product}}</div>
+		<div class='itemLabel'>Charge:</div> <div class='itemContent'>{{:data.price}}</div>
+	</div>
+	<div class='statusDisplay' style='overflow: auto;'>
+		{{if data.message_err}} <span class='uiIcon16 icon-alert' ></span>{{/if}} {{:data.message}}
+	</div>
+	<div class='item'>
+		{{:helper.link('Cancel', 'arrowreturn-1-w', {'cancelpurchase' : 1})}}
+	</div>
+</div>
+{{/if}}
+{{if data.panel}}
+<h2>Maintenance panel</h2>
+<div class='item'>
+	Max products: {{:data.max_products}}
+	Max Size: {{if data.max_size == 1}}tiny{{else data.max_size == 2}}small{{else data.max_size == 3}}normal{{else data.max_size == 4}}large{{else data.max_size == 5}}huge{{else data.max_size == 6}}gargantuan{{/if}}
+</div>
+<div class='item'>
+	<div class='itemLabel'>Speaker</div><div class='item'>{{:helper.link(data.speaker ? 'Enabled' : 'Disabled',  'gear', {'togglevoice' : 1})}}</div>
+	<div class='itemLabel'>Slogans</div><div class='item'>{{:helper.link('Edit', 'gear', {'edit_slogans' : 1})}}</div>
+	<div class='itemLabel'>Main menu ads</div><div class='item'>{{:helper.link('Edit', 'gear', {'edit_ads' : 1})}}</div>
+	<div class='itemLabel'>Machine name</div><div class='item'>{{:helper.link('Edit', 'gear', {'edit_name' : 1})}}</div>
+{{if data.can_change_icon}}
+	<div class='itemLabel'>Appearence</div><div class='item'>{{:helper.link('Edit', 'gear', {'set_icon' : 1})}}</div>
+{{/if}}
+</div>
+{{/if}}

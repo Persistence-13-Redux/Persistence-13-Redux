@@ -106,7 +106,7 @@
 			light_x1 = ux + 1
 			light_y1 = uy + 1
 			light_x2 = ux + 1
-			light_y2 = uy + lift_size_x - 1
+			light_y2 = uy + lift_size_y - 1
 
 		if(WEST)
 
@@ -164,12 +164,6 @@
 				if(tx >= ux && tx <= ex && ty >= uy && ty <= ey)
 					floor_turfs += checking
 
-		var/area_path = areas_to_use[az]
-		var/area/A = locate(area_path) || new area_path()
-		for(var/T in floor_turfs)
-			ChangeArea(T, A)
-		cfloor.set_area_ref("\ref[A]")
-
 		// Place exterior doors.
 		for(var/tx = door_x1 to door_x2)
 			for(var/ty = door_y1 to door_y2)
@@ -185,6 +179,7 @@
 							qdel(thing)
 				if(checking.type == floor_type) // Don't build over empty space on lower levels.
 					var/obj/machinery/door/airlock/lift/newdoor = new door_type(checking)
+					newdoor.dir = udir
 					if(internal)
 						lift.doors += newdoor
 						newdoor.lift = cfloor
@@ -201,23 +196,22 @@
 		panel_ext.set_dir(udir)
 		cfloor.ext_panel = panel_ext
 
-		// Place lights
-		var/turf/placing1 = locate(light_x1, light_y1, cz)
-		var/turf/placing2 = locate(light_x2, light_y2, cz)
-		var/obj/machinery/light/light1 = new(placing1, light)
-		var/obj/machinery/light/light2 = new(placing2, light)
-		if(udir == NORTH || udir == SOUTH)
-			light1.set_dir(WEST)
-			light2.set_dir(EAST)
-		else
-			light1.set_dir(SOUTH)
-			light2.set_dir(NORTH)
+		//Transfer access
+		panel_ext.req_access 					= src.req_access
+		panel_ext.req_access_faction 			= src.req_access_faction
+		panel_ext.req_access_personal 			= src.req_access_personal
 
 		// Update area.
 		if(az > areas_to_use.len)
 			log_debug("Insufficient defined areas in turbolift datum, aborting.")
 			qdel(src)
 			return
+
+		var/area_path = areas_to_use[az]
+		for(var/thing in floor_turfs)
+			new area_path(thing)
+		var/area/A = locate(area_path)
+		cfloor.set_area_ref("\ref[A]")
 		az++
 
 	// Place lift panel.
@@ -227,5 +221,21 @@
 	lift.current_floor = lift.floors[1]
 
 	lift.open_doors()
+	//Transfer access
+	lift.control_panel_interior.req_access 						= src.req_access
+	lift.control_panel_interior.req_access_faction 				= src.req_access_faction
+	lift.control_panel_interior.req_access_personal 			= src.req_access_personal
+
+	// Place lights
+	var/turf/placing1 = locate(light_x1, light_y1, uz)
+	var/turf/placing2 = locate(light_x2, light_y2, uz)
+	var/obj/machinery/light/light1 = new(placing1, light)
+	var/obj/machinery/light/light2 = new(placing2, light)
+	if(udir == NORTH || udir == SOUTH)
+		light1.set_dir(WEST)
+		light2.set_dir(EAST)
+	else
+		light1.set_dir(SOUTH)
+		light2.set_dir(NORTH)
 
 	qdel(src) // We're done.

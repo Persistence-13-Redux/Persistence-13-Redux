@@ -1,0 +1,7 @@
+/obj/effect/fluid/New()
+	. = ..()
+	ADD_SAVED_VAR(fluid_amount)
+	ADD_SAVED_VAR(equalizing_fluids)
+	ADD_SAVED_VAR(equalize_avg_depth)
+	ADD_SAVED_VAR(equalize_avg_temp)
+	ADD_SAVED_VAR(flow_amount)

@@ -25,6 +25,8 @@ PROCESSING_SUBSYSTEM_DEF(icon_update)
 		var/atom/A = curr[curr.len]
 		var/list/argv = curr[A]
 		curr.len--
+		if(QDELETED(A))
+			continue //Just in case
 
 		if (islist(argv))
 			A.update_icon(arglist(argv))
@@ -37,5 +39,7 @@ PROCESSING_SUBSYSTEM_DEF(icon_update)
 			return
 
 /atom/proc/queue_icon_update(...)
+	if(QDELETED(src))
+		return
 	SSicon_update.queue[src] = args.len ? args : TRUE
 	SSicon_update.wake()

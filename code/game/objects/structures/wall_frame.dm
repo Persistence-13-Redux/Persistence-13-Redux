@@ -164,7 +164,7 @@
 	if(health <= 0)
 		dismantle()
 
-/obj/structure/wall_frame/proc/dismantle()
+/obj/structure/wall_frame/dismantle()
 	new /obj/item/stack/material/steel(get_turf(src), 3)
 	qdel(src)
 

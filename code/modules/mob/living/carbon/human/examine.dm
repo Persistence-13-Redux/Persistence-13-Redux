@@ -283,12 +283,23 @@
 			perpname = src.name
 
 		if(perpname)
-			var/datum/computer_file/report/crew_record/R = get_crewmember_record(perpname)
-			if(R)
-				criminal = R.get_criminalStatus()
+			var/datum/world_faction/faction = FindFaction(user.get_faction())
+			if(faction)
+				var/datum/computer_file/report/crew_record/faction/record
+				if(!faction.get_record(perpname))
+					var/datum/computer_file/report/crew_record/faction/rec = new() //If there's no record created for them in the faction, make a new one.
+					if(!rec.load_from_global(perpname))
+						msg += "<span class = 'deptradio'>ERROR:No public records found! Record creation aborted!\n</span>"
+					else
+						CRASH("IMPLEMENT ME")
+						msg += "<span class = 'deptradio'>New record successfully created for [perpname] in [faction.name] database!\n</span>"
+						//faction.records.faction_records |= rec //Add to faction records
+ 				record = faction.get_record(perpname)
 
-			msg += "<span class = 'deptradio'>Criminal status:</span> <a href='?src=\ref[src];criminal=1'>\[[criminal]\]</a>\n"
-			msg += "<span class = 'deptradio'>Security records:</span> <a href='?src=\ref[src];secrecord=`'>\[View\]</a>\n"
+				if(record)
+					criminal = record.get_criminalStatus()
+				msg += "<span class = 'deptradio'>Criminal status:</span> <a href='?src=\ref[src];criminal=1'>\[[criminal]\]</a>\n"
+				msg += "<span class = 'deptradio'>Security records:</span> <a href='?src=\ref[src];secrecord=`'>\[View\]</a>\n"
 
 	if(hasHUD(user, HUD_MEDICAL))
 		var/perpname = "wot"
@@ -300,13 +311,14 @@
 		else
 			perpname = src.name
 
-		var/datum/computer_file/report/crew_record/R = get_crewmember_record(perpname)
-		if(R)
-			medical = R.get_status()
+		var/datum/world_faction/faction = FindFaction(user.get_faction())
+		if(faction)
+			var/datum/computer_file/report/crew_record/faction/R = faction.get_record(perpname)
+			if(R)
+				medical = R.get_status()
 
-		msg += "<span class = 'deptradio'>Physical status:</span> <a href='?src=\ref[src];medical=1'>\[[medical]\]</a>\n"
-		msg += "<span class = 'deptradio'>Medical records:</span> <a href='?src=\ref[src];medrecord=`'>\[View\]</a>\n"
-
+			msg += "<span class = 'deptradio'>Physical status:</span> <a href='?src=\ref[src];medical=1'>\[[medical]\]</a>\n"
+			msg += "<span class = 'deptradio'>Medical records:</span> <a href='?src=\ref[src];medrecord=`'>\[View\]</a>\n"
 
 	if(print_flavor_text()) msg += "[print_flavor_text()]\n"
 

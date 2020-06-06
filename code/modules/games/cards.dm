@@ -207,7 +207,8 @@
 
 /obj/item/weapon/pack/Initialize()
 	. = ..()
-	SetupCards()
+	if(!map_storage_loaded)
+		SetupCards()
 
 /obj/item/weapon/pack/proc/SetupCards()
 	return

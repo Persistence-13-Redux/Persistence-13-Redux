@@ -116,7 +116,7 @@
 	var/list/results = list()
 
 	if(connected_device)
-		results += connected_device.air_contents
+		results += connected_device.return_air()
 
 	return results
 

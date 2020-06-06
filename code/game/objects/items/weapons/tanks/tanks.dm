@@ -1,4 +1,4 @@
-#define TANK_IDEAL_PRESSURE 1015 //Arbitrary.
+// #define TANK_IDEAL_PRESSURE 1015 //Arbitrary.
 
 var/list/global/tank_gauge_cache = list()
 

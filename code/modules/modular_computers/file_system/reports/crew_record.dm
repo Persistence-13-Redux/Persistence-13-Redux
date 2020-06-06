@@ -5,6 +5,8 @@ GLOBAL_VAR_INIT(default_physical_status, "Active")
 GLOBAL_LIST_INIT(security_statuses, list("None", "Released", "Parolled", "Incarcerated", "Arrest"))
 GLOBAL_VAR_INIT(default_security_status, "None")
 GLOBAL_VAR_INIT(arrest_security_status, "Arrest")
+GLOBAL_LIST_INIT(employement_status, list(EMPLOYMENT_STATUS_EMPLOYED, EMPLOYMENT_STATUS_SUSPENDED, EMPLOYMENT_STATUS_FIRED, EMPLOYMENT_STATUS_UNEMPLOYED))
+GLOBAL_LIST_INIT(work_status, list(WORK_STATUS_ON_DUTY, WORK_STATUS_OFF_DUTY))
 
 // Kept as a computer file for possible future expansion into servers.
 /datum/computer_file/report/crew_record
@@ -111,42 +113,58 @@ GLOBAL_VAR_INIT(arrest_security_status, "Arrest")
 		var/skills = list()
 		for(var/decl/hierarchy/skill/S in GLOB.skills)
 			var/level = H.get_skill_value(S.type)
-			if(level > SKILL_NONE)
+			if(level > SKILL_NONE && LAZYLEN(S.levels) >= level)
 				skills += "[S.name], [S.levels[level]]"
+			else if(LAZYLEN(S.levels) >= level)
+				log_debug("crew_report.load_from_mob(): trying to access non-existent skill level '[level]' from skill '[S.name]', which has only [LAZYLEN(S.levels)] levels!")
 
 		set_skillset(jointext(skills,"\n"))
 
 	// Antag record
 	set_antagRecord(H && H.exploit_record && !jobban_isbanned(H, "Records") ? html_decode(H.exploit_record) : "")
 
+	set_email_login(H && H.mind && H.mind.ShowMemory())
+
+// Returns independent copy of this file.
+/datum/computer_file/report/crew_record/clone(var/rename = 0)
+	var/datum/computer_file/report/crew_record/temp = ..()
+	return temp
+
 // Global methods
 // Used by character creation to create a record for new arrivals.
 /proc/CreateModularRecord(var/mob/living/carbon/human/H)
-	var/datum/computer_file/report/crew_record/CR = new/datum/computer_file/report/crew_record()
-	GLOB.all_crew_records.Add(CR)
-	CR.load_from_mob(H)
+	var/datum/character_records/CR = GetCharacterRecord(H.real_name)
+	var/datum/computer_file/report/crew_record/C = get_crewmember_record(H.real_name)
+	if(!CR)
+		CR = new/datum/character_records()
+		CR.load_from_mob(H)
+		PSDB.characters.CreateCharacterRecord(H.real_name, H.ckey)
+		PSDB.characters.CommitCharacterRecord(CR)
+	if(!C)
+		C = new/datum/computer_file/report/crew_record()
+		C.load_from_mob(H)
+		PSDB.crew_records.CreateGlobalCrewRecord(C)
 	return CR
 
 // Gets crew records filtered by set of positions
 /proc/department_crew_manifest(var/list/filter_positions, var/blacklist = FALSE)
-	var/list/matches = list()
-	for(var/datum/computer_file/report/crew_record/CR in GLOB.all_crew_records)
-		var/rank = CR.get_job()
-		if(blacklist)
-			if(!(rank in filter_positions))
-				matches.Add(CR)
-		else
-			if(rank in filter_positions)
-				matches.Add(CR)
-	return matches
+	if(!filter_positions)
+		return
+	var/matchcondition = "job [blacklist? "NOT" : ""] IN ("
+	var/addcomma = FALSE
+	for(var/entry in filter_positions)
+		matchcondition += "[addcomma? ",": ""] [entry]"
+		addcomma = TRUE
+	matchcondition += ")"
+	return PSDB.crew_records.GetGlobalCrewRecords(matchcondition)
 
 // Simple record to HTML (for paper purposes) conversion.
 // Not visually that nice, but it gets the work done, feel free to tweak it visually
-/proc/record_to_html(var/datum/computer_file/report/crew_record/CR, var/access)
+/proc/record_to_html(var/datum/computer_file/report/crew_record/CR, var/access, var/faction_uid)
 	var/dat = "<tt><H2>RECORD DATABASE DATA DUMP</H2><i>Generated on: [stationdate2text()] [stationtime2text()]</i><br>******************************<br>"
 	dat += "<table>"
 	for(var/datum/report_field/F in CR.fields)
-		if(F.verify_access(access))
+		if(F.verify_access(access, faction_uid))
 			dat += "<tr><td><b>[F.display_name()]</b>"
 			if(F.needs_big_box)
 				dat += "<tr>"
@@ -219,6 +237,11 @@ FIELD_LONG("Qualifications", skillset, access_bridge, access_bridge)
 
 // ANTAG RECORDS
 FIELD_LONG("Exploitable Information", antagRecord, access_syndicate, access_syndicate)
+
+// ----------------------------- PS13 --------------------------------------
+FIELD_SHORT("Email Account", email_login, null, access_change_ids)
+FIELD_NUM("Ownership upgrade level", network_level, null, access_change_ids)
+// ----------------------------- PS13 --------------------------------------
 
 //Options builderes
 /datum/report_field/options/crew_record/rank/proc/record_ranks()

@@ -352,7 +352,7 @@ meteor_act
 					I.has_embedded()
 
 		// Begin BS12 momentum-transfer code.
-		var/mass = 1.5
+		var/mass = AM.mass
 		if(istype(O, /obj/item))
 			var/obj/item/I = O
 			mass = I.w_class/THROWNOBJ_KNOCKBACK_DIVISOR

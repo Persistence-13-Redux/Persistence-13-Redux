@@ -1,0 +1,5 @@
+/obj/structure/boulder/New()
+	..()
+	ADD_SAVED_VAR(excavation_level)
+	ADD_SAVED_VAR(geological_data)
+	ADD_SAVED_VAR(artifact_find)

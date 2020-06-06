@@ -60,8 +60,9 @@
 	var/scent_range = 1
 
 /datum/reagent/New(var/datum/reagents/holder)
-	if(!istype(holder))
-		CRASH("Invalid reagents holder: [log_info_line(holder)]")
+	//Have to comment this CRASH, because on mapload it breaks everything
+	// if(!istype(holder))
+	// 	CRASH("[src]: Invalid reagents holder: [log_info_line(holder)]")
 	src.holder = holder
 	..()
 

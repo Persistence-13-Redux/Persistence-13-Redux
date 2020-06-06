@@ -68,8 +68,12 @@
 /world/New()
 
 	enable_debugger()
+
 	//set window title
-	name = "[server_name] - [GLOB.using_map.full_name]"
+	if(config && length(config.server_name))
+		name = "[config.server_name] - [GLOB.using_map.full_name]"
+	else
+		name = "MISSING CONFIG - [GLOB.using_map.full_name]"
 
 	//logs
 	SetupLogs()
@@ -565,14 +569,10 @@ var/world_topic_spam_protect_time = world.timeofday
 
 	if (config && config.server_name)
 		s += "<b>[config.server_name]</b> &#8212; "
-
 	s += "<b>[station_name()]</b>";
-	s += " ("
-	s += "<a href=\"https://forums.baystation12.net/\">" //Change this to wherever you want the hub to link to.
-//	s += "[game_version]"
-	s += "Forums"  //Replace this with something else. Or ever better, delete it and uncomment the game version.
-	s += "</a>"
-	s += ")"
+	s += " ([game_version])"
+	if(config && length(config.forumurl))
+		s += "(<a href=\"[config.forumurl]\">Forums</a>)" //Change this to wherever you want the hub to link to.
 
 	var/list/features = list()
 

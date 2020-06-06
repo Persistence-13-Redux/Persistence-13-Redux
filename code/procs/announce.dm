@@ -10,6 +10,7 @@
 	var/newscast = 0
 	var/channel_name = "Announcements"
 	var/announcement_type = "Announcement"
+	var/faction_uid
 
 /datum/announcement/priority
 	title = "Priority Announcement"
@@ -40,12 +41,18 @@
 	message_title = sanitizeSafe(message_title)
 
 	var/msg = FormMessage(message, message_title)
-	for(var/mob/M in GLOB.player_list)
-		if((M.z in (zlevels | GLOB.using_map.admin_levels)) && !istype(M,/mob/new_player) && !isdeaf(M))
-			to_chat(M, msg)
-			if(message_sound)
-				sound_to(M, message_sound)
-
+	if(isnull(faction_uid))
+		for(var/mob/M in GLOB.player_list)
+			if((M.z in (zlevels | GLOB.using_map.admin_levels)) && !istype(M,/mob/new_player) && !isdeaf(M))
+				to_chat(M, msg)
+				if(message_sound)
+					sound_to(M, message_sound)
+	else
+		for(var/mob/M in GLOB.player_list)
+			if((M.z in (zlevels | GLOB.using_map.admin_levels)) && !istype(M,/mob/new_player) && !isdeaf(M) && M.get_faction_uid() == faction_uid)
+				to_chat(M, msg)
+				if(message_sound)
+					sound_to(M, message_sound)
 	if(do_newscast)
 		NewsCast(message, message_title)
 
@@ -57,7 +64,7 @@ datum/announcement/proc/FormMessage(message as text, message_title as text)
 	. = "<h2 class='alert'>[message_title]</h2>"
 	. += "<br><span class='alert'>[message]</span>"
 	if (announcer)
-		. += "<br><span class='alert'> -[html_encode(announcer)]</span>"
+		. += "<br><span class='alert'> -[!isnull(faction_uid)? "([faction_uid])" : ""] [html_encode(announcer)]</span>"
 
 datum/announcement/minor/FormMessage(message as text, message_title as text)
 	. = "<b>[message]</b>"
@@ -66,7 +73,7 @@ datum/announcement/priority/FormMessage(message as text, message_title as text)
 	. = "<h1 class='alert'>[message_title]</h1>"
 	. += "<br><span class='alert'>[message]</span>"
 	if(announcer)
-		. += "<br><span class='alert'> -[html_encode(announcer)]</span>"
+		. += "<br><span class='alert'> -[!isnull(faction_uid)? "([faction_uid])" : ""] [html_encode(announcer)]</span>"
 	. += "<br>"
 
 datum/announcement/priority/command/FormMessage(message as text, message_title as text)

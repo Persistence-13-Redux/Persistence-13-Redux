@@ -1,0 +1,6 @@
+/obj/machinery/constructable_frame/New(var/location, var/state = null)
+	..(location)
+	ADD_SAVED_VAR(circuit)
+	ADD_SAVED_VAR(expected_machine_type)
+	ADD_SAVED_VAR(construct_state)
+	ADD_SAVED_VAR(uncreated_component_parts)

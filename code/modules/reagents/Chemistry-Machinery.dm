@@ -53,7 +53,7 @@
 		to_chat(user, "You add the beaker to the machine!")
 		src.updateUsrDialog()
 		icon_state = "mixer1"
-
+		return 1
 	else if(istype(B, /obj/item/weapon/storage/pill_bottle))
 
 		if(src.loaded_pill_bottle)
@@ -64,6 +64,8 @@
 		src.loaded_pill_bottle = B
 		to_chat(user, "You add the pill bottle into the dispenser slot!")
 		src.updateUsrDialog()
+		return 1
+	return ..()
 
 /obj/machinery/chem_master/Topic(href, href_list, state)
 	if(..())

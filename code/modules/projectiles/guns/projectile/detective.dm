@@ -20,27 +20,27 @@
 		else
 			icon_state = "[initial(icon_state)]-e"
 
-/obj/item/weapon/gun/projectile/pistol/sec/detective/verb/rename_gun()
-	set name = "Name Gun"
-	set category = "Object"
-	set desc = "Rename your gun. If you're the detective."
+// /obj/item/weapon/gun/projectile/pistol/sec/detective/verb/rename_gun()
+// 	set name = "Name Gun"
+// 	set category = "Object"
+// 	set desc = "Rename your gun. If you're the detective."
 
-	var/mob/M = usr
-	if(!M.mind)	return 0
-	if(M.incapacitated()) return 0
-	if(!M.mind.assigned_role == "Detective")
-		to_chat(M, "<span class='notice'>You don't feel cool enough to name this gun, chump.</span>")
-		return 0
+// 	var/mob/M = usr
+// 	if(!M.mind)	return 0
+// 	if(M.incapacitated()) return 0
+// 	if(!M.mind.assigned_role == "Detective")
+// 		to_chat(M, "<span class='notice'>You don't feel cool enough to name this gun, chump.</span>")
+// 		return 0
 
-	var/input = sanitizeSafe(input("What do you want to name the gun?","Rename gun"), MAX_NAME_LEN)
+// 	var/input = sanitizeSafe(input("What do you want to name the gun?","Rename gun"), MAX_NAME_LEN)
 
-	if(src && input && !M.incapacitated() && in_range(M,src))
-		if(!findtext(input, "the", 1, 4))
-			input = "\improper [input]"
-		name = input
-		unique_name = input
-		to_chat(M, "You name the gun '[input]'. Say hello to your new friend.")
-		return 1
+// 	if(src && input && !M.incapacitated() && in_range(M,src))
+// 		if(!findtext(input, "the", 1, 4))
+// 			input = "\improper [input]"
+// 		name = input
+// 		unique_name = input
+// 		to_chat(M, "You name the gun '[input]'. Say hello to your new friend.")
+// 		return 1
 
 /obj/item/weapon/gun/projectile/pistol/sec/detective/verb/reskin_gun()
 	set name = "Reskin gun"

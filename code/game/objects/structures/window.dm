@@ -68,11 +68,14 @@
 
 /obj/structure/window/Destroy()
 	set_density(0)
-	update_nearby_tiles()
 	var/turf/location = loc
+	if(location)
+		update_nearby_tiles()
 	. = ..()
-	for(var/obj/structure/window/W in orange(location, 1))
-		W.update_icon()
+	if(location)
+		for(var/obj/structure/window/W in orange(location, 1))
+			if(!QDELETED(W))
+				W.update_icon()
 
 /obj/structure/window/examine(mob/user)
 	. = ..(user)
@@ -349,7 +352,7 @@
 		return 1
 	return 0
 
-/obj/structure/window/proc/set_anchored(var/new_anchored)
+/obj/structure/window/set_anchored(var/new_anchored)
 	if(anchored == new_anchored)
 		return
 	anchored = new_anchored

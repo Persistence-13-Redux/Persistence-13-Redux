@@ -1,0 +1,6 @@
+/obj/effect/decal/cleanable/blood/tracks/New()
+	. = ..()
+	ADD_SAVED_VAR(dirs)
+	ADD_SAVED_VAR(coming_state)
+	ADD_SAVED_VAR(going_state)
+	ADD_SAVED_VAR(setdirs)

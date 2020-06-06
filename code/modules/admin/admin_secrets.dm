@@ -19,6 +19,9 @@ var/datum/admin_secrets/admin_secrets = new()
 
 		var/datum/admin_secret_item/item = new item_type()
 		var/datum/admin_secret_category/category = category_assoc[item.category]
+		if(!category)
+			log_error("/datum/admin_secrets/New() : Category type for menu item : '[item]' is undefined!")
+			continue
 		dd_insertObjectList(category.items, item)
 		items += item
 

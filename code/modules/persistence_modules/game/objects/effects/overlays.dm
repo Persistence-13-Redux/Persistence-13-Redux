@@ -1,0 +1,1 @@
+/obj/effect/overlay/beam/should_save = 0

@@ -1,0 +1,5 @@
+/datum/nano_module/shields_monitor/get_shields()
+	var/turf/T = get_turf(nano_host())
+	if(!T)
+		return list()
+	return ..()

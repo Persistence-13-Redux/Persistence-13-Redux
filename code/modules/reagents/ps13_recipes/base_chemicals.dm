@@ -1,0 +1,93 @@
+//Alternate, more true to life reaction by fermentation and "distilation"
+/datum/chemical_reaction/ethanol2
+	name = "pure ethanol"
+	result = /datum/reagent/ethanol
+	result_amount = 6
+	required_reagents = list(/datum/reagent/sugar = 4, /datum/reagent/water = 4, /datum/reagent/enzyme = 2)
+	minimum_temperature = T0C + 80 //Normally you'd wanna distill. But this will do
+	maximum_temperature = T0C + 100
+
+/datum/chemical_reaction/acetone_production
+	name = "Acetone Production"
+	result = /datum/reagent/acetone
+	required_reagents = list(/datum/reagent/oxygen = 1, /datum/reagent/carbon = 3, /datum/reagent/hydrogen = 6) //(CH3)2CO
+	result_amount = 6
+
+/datum/chemical_reaction/sulphuric_acid_prod
+	name = "Sulphuric Acid Production"
+	result = /datum/reagent/acid
+	required_reagents = list(/datum/reagent/sulfur = 1, /datum/reagent/oxygen = 4, /datum/reagent/hydrogen = 2) //H2SO4.
+	result_amount = 1
+
+/datum/chemical_reaction/hydrochloric_acid_prod
+	name = "Hydrochloric Acid production"
+	result = /datum/reagent/acid/hydrochloric
+	required_reagents = list(/datum/reagent/toxin/chlorine = 1, /datum/reagent/hydrogen = 1, /datum/reagent/water = 1)// 1:1 hydrogen chloride to water makes HCl acid.
+	result_amount = 1
+
+/datum/chemical_reaction/ammonia_production
+	name = "Ammonia Production"
+	result = /datum/reagent/ammonia
+	required_reagents = list(/datum/reagent/nitrogen = 1, /datum/reagent/hydrogen = 3)
+	result_amount = 4
+
+/datum/chemical_reaction/ice
+	name = "water ice"
+	result = /datum/reagent/drink/ice
+	result_amount = 1
+	required_reagents = list(/datum/reagent/water = 1)
+	minimum_temperature = T0C
+	maximum_temperature = T0C - 150
+
+/datum/chemical_reaction/welding_fuel
+	name = "welding fuel"
+	result = /datum/reagent/fuel
+	result_amount = 20
+	required_reagents = list(/datum/reagent/acetone = 10, /datum/reagent/ethanol = 10)
+	minimum_temperature = T0C + 20
+	maximum_temperature = T0C + 50
+
+/datum/chemical_reaction/hydrazine
+	name = "hydrazine"
+	result = /datum/reagent/hydrazine
+	result_amount = 20
+	required_reagents = list(/datum/reagent/hydrogen_peroxide = 10, /datum/reagent/acid/acetic = 5, /datum/reagent/ammonia = 5)
+	minimum_temperature = T0C + 20
+	maximum_temperature = T0C + 50
+
+/datum/chemical_reaction/hydrogen_peroxide
+	name = "hydrazine"
+	result = /datum/reagent/hydrazine
+	result_amount = 2
+	required_reagents = list(/datum/reagent/water = 1, /datum/reagent/oxygen = 1) //well H2O2.. not perfect. should work tho
+	minimum_temperature = T0C + 20
+	maximum_temperature = T0C + 50
+
+/datum/chemical_reaction/acetic_acid
+	name = "acetic acid"
+	result = /datum/reagent/acid/acetic
+	result_amount = 10
+	required_reagents = list(/datum/reagent/nutriment/vinegar = 10)
+	minimum_temperature = T0C + 100 // fAARRRRR far far from ideal but.. well its better than just plain vinegar 
+	maximum_temperature = T0C + 120
+
+/datum/chemical_reaction/methanol
+	name = "methanol"
+	result = /datum/reagent/methanol
+	required_reagents = list(/datum/reagent/hydrogen = 5, /datum/reagent/carbon_monoxide = 5)
+	catalysts = list(/datum/reagent/copper = 5)
+	result_amount = 10
+
+/datum/chemical_reaction/methyl_bromide2
+	name = "Methyl Bromide"
+	required_reagents = list(/datum/reagent/toxin/bromide = 1, /datum/reagent/methanol = 1, /datum/reagent/hydrogen = 2)
+	result_amount = 3
+	result = /datum/reagent/toxin/methyl_bromide
+	mix_message = "The solution begins to bubble, emitting a dark vapor."
+
+/datum/chemical_reaction/hydrogen_peroxide
+	name = "Hydrogen peroxyde"
+	required_reagents = list(/datum/reagent/ammonia = 1, /datum/reagent/hydrogen = 1, /datum/reagent/oxygen = 1, /datum/reagent/acid = 1)
+	result_amount = 4
+	result = /datum/reagent/hydrogen_peroxide
+	mix_message = "The solution begins to bubble, emitting little vapor."

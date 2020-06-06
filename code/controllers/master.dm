@@ -112,7 +112,8 @@ GLOBAL_REAL(Master, /datum/controller/master) = new
 	Master.processing = FALSE //stop ticking this one
 	try
 		new/datum/controller/master()
-	catch
+	catch(var/exception/e)
+		log_error("proc/Recreate_MC(): '[e]'([e.file]:[e.line])")
 		return -1
 	return 1
 

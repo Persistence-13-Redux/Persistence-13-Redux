@@ -75,7 +75,7 @@
 	if(health <= 0)
 		dismantle()
 
-/obj/structure/barricade/proc/dismantle()
+/obj/structure/barricade/dismantle()
 	visible_message("<span class='danger'>The barricade is smashed apart!</span>")
 	material.place_dismantled_product(get_turf(src))
 	qdel(src)

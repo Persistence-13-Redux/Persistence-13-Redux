@@ -1,0 +1,7 @@
+/obj/machinery/atmospherics/trinary/New()
+	..()
+	ADD_SAVED_VAR(air1)
+	ADD_SAVED_VAR(air2)
+	ADD_SAVED_VAR(air3)
+	ADD_SAVED_VAR(pipe_class)
+	ADD_SAVED_VAR(connect_dir_type)

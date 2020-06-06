@@ -23,13 +23,13 @@
 	var/slowdown_worn = 2
 
 /obj/item/weapon/gun/magnetic/railgun/Initialize()
+	if(!map_storage_loaded)
+		capacitor = new initial_capacitor_type(src)
+		capacitor.charge = capacitor.max_charge
 
-	capacitor = new initial_capacitor_type(src)
-	capacitor.charge = capacitor.max_charge
-
-	cell = new initial_cell_type(src)
-	if (ispath(loaded))
-		loaded = new loaded (src, load_sheet_max)
+		cell = new initial_cell_type(src)
+		if (ispath(loaded))
+			loaded = new loaded (src, load_sheet_max)
 	slowdown_per_slot[slot_l_hand] =  slowdown_held
 	slowdown_per_slot[slot_r_hand] =  slowdown_held
 	slowdown_per_slot[slot_back] =    slowdown_worn
