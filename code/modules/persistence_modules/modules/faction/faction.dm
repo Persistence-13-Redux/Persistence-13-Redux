@@ -1,0 +1,3 @@
+/datum/faction
+	var/name
+	

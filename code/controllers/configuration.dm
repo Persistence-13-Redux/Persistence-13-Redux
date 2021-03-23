@@ -233,6 +233,13 @@ var/list/gamemode_cache = list()
 	var/max_acts_per_interval = 140 //Number of actions per interval permitted for spam protection.
 	var/act_interval = 0.1 SECONDS //Interval for spam prevention.
 
+	//World Save stuff
+	var/save_path = "data/world_save"
+	var/save_backup_path = "data/world_save_backups"
+	var/save_interval = 1.5 HOURS
+	var/save_per_zlevel = TRUE //If true, one save file per z-level will be generated! If not, a single file for everything will be used
+	var/save_text_copy = FALSE //If true a copy of the data saved for the map will be saved as a human readable text file for debug purpose
+
 /datum/configuration/New()
 	var/list/L = typesof(/datum/game_mode) - /datum/game_mode
 	for (var/T in L)
@@ -755,6 +762,18 @@ var/list/gamemode_cache = list()
 					config.max_acts_per_interval = text2num(value)
 				if ("act_interval")
 					config.act_interval = text2num(value) SECONDS
+
+				//Save Stuff
+				if ("save_path")
+					config.save_path = value
+				if ("save_backup_path")
+					config.save_backup_path = value
+				if("save_interval")
+					config.save_interval = text2num(value)
+				if("save_per_zlevel")
+					config.save_per_zlevel = text2num(value)
+				if("save_text_copy")
+					config.save_text_copy = text2num(value)
 
 				else
 					log_misc("Unknown setting in configuration: '[name]'")

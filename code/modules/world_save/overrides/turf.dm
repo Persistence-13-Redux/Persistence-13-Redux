@@ -1,0 +1,20 @@
+/turf/before_save()
+	. = ..()
+	save_custom_value("area_ref", "\ref[loc]")
+	save_custom_value("zone_ref", "\ref[zone]")
+
+/turf/after_load()
+	. = ..()
+	var/area_ref = load_custom_value("area_ref")
+	var/zone_ref = load_custom_value("zone_ref")
+	if(area_ref != "\ref[loc]")
+		log_debug("[T]([x],[y],[z]) mismatch of area reference on load! ([area_ref] != \ref[loc])")
+	if(zone_ref != "\ref[zone]")
+		log_debug("[T]([x],[y],[z]) mismatch of area reference on load! ([zone_ref] != \ref[zone])")
+	if(loc && loc.x < 1)
+		loc.loc = src //Make sure the area
+
+/turf/Write(savefile/S)
+	WSAVE.SaveArea(loc, S)
+	WSAVE.SaveZone(zone, S)
+	. = ..()
