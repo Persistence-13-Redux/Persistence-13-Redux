@@ -12,6 +12,11 @@
 	if(can_buckle && buckled_mob)
 		user_unbuckle_mob(user)
 
+/obj/attack_robot(mob/user)
+	. = ..()
+	if (can_buckle && buckled_mob)
+		user_unbuckle_mob(user)
+
 /obj/MouseDrop_T(mob/living/M, mob/living/user)
 	. = ..()
 	if(can_buckle && istype(M))
@@ -66,6 +71,9 @@
 		return 0
 	if(M == buckled_mob)
 		return 0
+	if (M.grabbed_by.len)
+		to_chat(user, SPAN_WARNING("\The [M] is being grabbed and cannot be buckled."))
+		return FALSE
 	if(istype(M, /mob/living/carbon/slime))
 		to_chat(user, "<span class='warning'>\The [M] is too squishy to buckle in.</span>")
 		return 0
@@ -105,4 +113,3 @@
 				"<span class='notice'>You hear metal clanking.</span>")
 		add_fingerprint(user)
 	return M
-

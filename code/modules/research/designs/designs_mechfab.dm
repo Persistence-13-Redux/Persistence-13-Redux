@@ -406,6 +406,13 @@
 	req_tech = list(TECH_COMBAT = 2, TECH_MATERIAL = 4, TECH_ENGINEERING = 3)
 	build_path = /obj/item/mech_equipment/mounted_system/taser/plasma
 
+/datum/design/item/exosuit/weapon/plasma/auto
+	name = "mounted rotatory plasma cutter"
+	id = "mech_plasma_auto"
+	materials = list(MATERIAL_STEEL = 20000, MATERIAL_SILVER = 2000, MATERIAL_GOLD = 2000)
+	req_tech = list(TECH_COMBAT = 3, TECH_MATERIAL = 5, TECH_ENGINEERING = 3)
+	build_path = /obj/item/mech_equipment/mounted_system/taser/autoplasma
+
 /datum/design/item/exosuit/weapon/ion
 	name = "mounted ion rifle"
 	id = "mech_ion"
@@ -418,6 +425,11 @@
 	req_tech = list(TECH_COMBAT = 4, TECH_MAGNET = 4)
 	build_path = /obj/item/mech_equipment/mounted_system/taser/laser
 
+/datum/design/item/exosuit/weapon/machete
+	name = "Mechete"
+	id = "mech_machete"
+	req_tech = list(TECH_COMBAT = 2)
+	build_path = /obj/item/mech_equipment/mounted_system/melee/mechete
 /datum/design/item/exosuit/rcd
 	name = "RCD"
 	id = "mech_rcd"
@@ -449,6 +461,14 @@
 	materials = list(MATERIAL_STEEL = 20000, MATERIAL_SILVER = 12000, MATERIAL_GOLD = 12000)
 	req_tech = list(TECH_MATERIAL = 4, TECH_MAGNET = 4, TECH_POWER = 4, TECH_COMBAT = 2)
 	build_path = /obj/item/mech_equipment/shields
+
+/datum/design/item/exosuit/mechshields/ballistic
+	name = "plasteel mech shield"
+	id = "mech_shield_ballistic"
+	time = 45
+	materials = list(MATERIAL_STEEL = 40000, MATERIAL_ALUMINIUM = 5000)
+	req_tech = list(TECH_MATERIAL = 3)
+	build_path = /obj/item/mech_equipment/ballistic_shield
 // End mechs.
 
 /datum/design/item/synthetic_flash
@@ -516,6 +536,20 @@
 	materials = list(DEFAULT_WALL_MATERIAL = 10000, "glass" = 750)
 	id = "augment_armor"
 
+/datum/design/item/mechfab/augment/hud/health
+	name = "Implantable health HUD"
+	build_path = /obj/item/organ/internal/augment/active/hud/health
+	materials = list(DEFAULT_WALL_MATERIAL = 250, "glass" = 250)
+	req_tech = list(TECH_BIO = 2, TECH_MAGNET = 3)
+	id = "augment_med_hud"
+
+/datum/design/item/mechfab/augment/hud/security
+	name = "Implantable security HUD"
+	build_path = /obj/item/organ/internal/augment/active/hud/security
+	materials = list(DEFAULT_WALL_MATERIAL = 250, "glass" = 250)
+	req_tech = list(TECH_MAGNET = 3, TECH_COMBAT = 2)
+	id = "augment_sec_hud"
+
 /datum/design/item/mechfab/augment/nanounit
 	name = "Nanite MCU"
 	build_path = /obj/item/organ/internal/augment/active/nanounit
@@ -532,7 +566,7 @@
 /datum/design/item/mechfab/rig/zero
 	category = "Hardsuits"
 	name = "Null suit control module"
-	build_path = /obj/item/weapon/rig/zero
+	build_path = /obj/item/rig/zero
 	materials = list(DEFAULT_WALL_MATERIAL = 30000, "glass" = 5000, "silver" = 1000)
 	id = "null _suit"
 	time = 120

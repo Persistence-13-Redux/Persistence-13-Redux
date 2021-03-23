@@ -12,6 +12,7 @@
 	heating_point = 100 CELSIUS
 	heating_message = "goes clear."
 	value = 2
+	should_admin_log = TRUE
 
 	var/target_organ
 	var/strength = 4 // How much damage it deals per unit
@@ -340,11 +341,11 @@
 	if(alien == IS_DIONA)
 		return
 	if(alien == IS_SKRELL)
-		M.take_organ_damage(2.4 * removed, 0)
+		M.take_organ_damage(2.4 * removed, 0, ORGAN_DAMAGE_FLESH_ONLY)
 		if(M.losebreath < 22.5)
 			M.losebreath++
 	else
-		M.take_organ_damage(3 * removed, 0)
+		M.take_organ_damage(3 * removed, 0, ORGAN_DAMAGE_FLESH_ONLY)
 		if(M.losebreath < 15)
 			M.losebreath++
 
@@ -393,6 +394,7 @@
 	reagent_state = LIQUID
 	color = "#801e28"
 	value = 1.2
+	should_admin_log = TRUE
 
 /datum/reagent/slimejelly/affect_blood(var/mob/living/carbon/M, var/alien, var/removed)
 	if(alien == IS_DIONA)
@@ -412,6 +414,8 @@
 	metabolism = REM * 0.5
 	overdose = REAGENTS_OVERDOSE
 	value = 2.5
+	scannable = TRUE
+	should_admin_log = TRUE
 
 /datum/reagent/soporific/affect_blood(var/mob/living/carbon/M, var/alien, var/removed)
 	if(alien == IS_DIONA)
@@ -446,6 +450,7 @@
 	metabolism = REM * 0.5
 	overdose = REAGENTS_OVERDOSE * 0.5
 	value = 2.6
+	should_admin_log = TRUE
 
 /datum/reagent/chloralhydrate/affect_blood(var/mob/living/carbon/M, var/alien, var/removed)
 	if(alien == IS_DIONA)
@@ -488,6 +493,7 @@
 	metabolism = REM * 0.5
 	overdose = REAGENTS_OVERDOSE * 0.5
 	value = 2.6
+	should_admin_log = TRUE
 
 /datum/reagent/vecuronium_bromide/affect_blood(var/mob/living/carbon/M, var/alien, var/removed)
 	if(alien == IS_DIONA)
@@ -524,6 +530,7 @@
 	metabolism = REM * 0.5
 	overdose = REAGENTS_OVERDOSE
 	value = 2.8
+	should_admin_log = TRUE
 
 /datum/reagent/space_drugs/affect_blood(var/mob/living/carbon/M, var/alien, var/removed)
 	if(alien == IS_DIONA)
@@ -534,10 +541,11 @@
 		drug_strength = drug_strength * 0.8
 
 	M.druggy = max(M.druggy, drug_strength)
-	if(prob(10))
-		M.SelfMove(pick(GLOB.cardinal))
-	if(prob(7))
-		M.emote(pick("twitch", "drool", "moan", "giggle"))
+	if (alien != IS_SKRELL)
+		if (prob(10))
+			M.SelfMove(pick(GLOB.cardinal))
+		if(prob(7))
+			M.emote(pick("twitch", "drool", "moan", "giggle"))
 	M.add_chemical_effect(CE_PULSE, -1)
 
 /datum/reagent/serotrotium
@@ -607,6 +615,7 @@
 	metabolism = REM * 0.25
 	overdose = REAGENTS_OVERDOSE
 	value = 0.6
+	should_admin_log = TRUE
 
 /datum/reagent/mindbreaker/affect_blood(var/mob/living/carbon/M, var/alien, var/removed)
 	if(alien == IS_DIONA)
@@ -672,6 +681,7 @@
 	color = "#ccccff"
 	metabolism = REM
 	overdose = 25
+	should_admin_log = TRUE
 
 	// M A X I M U M C H E E S E
 	var/global/list/dose_messages = list(
@@ -742,6 +752,7 @@
 	color = "#13bc5e"
 	metabolism = REM * 0.2
 	value = 2
+	should_admin_log = TRUE
 
 /datum/reagent/slimetoxin/affect_blood(var/mob/living/carbon/human/H, var/alien, var/removed)
 	if(!istype(H))
@@ -802,7 +813,7 @@
 	M.overlays.Cut()
 	M.set_invisibility(101)
 	for(var/obj/item/W in M)
-		if(istype(W, /obj/item/weapon/implant)) //TODO: Carn. give implants a dropped() or something
+		if(istype(W, /obj/item/implant)) //TODO: Carn. give implants a dropped() or something
 			qdel(W)
 			continue
 		M.drop_from_inventory(W)
@@ -851,35 +862,6 @@
 	M.species.set_default_hair(M)
 	to_chat(M, "<span class='warning'>You feel a chill and your skin feels lighter..</span>")
 	remove_self(volume)
-
-/datum/reagent/toxin/zombie
-	name = "Liquid Corruption"
-	description = "A filthy, oily substance which slowly churns of its own accord."
-	taste_description = "decaying blood"
-	color = "#800000"
-	taste_mult = 5
-	strength = 10
-	metabolism = REM * 5
-	overdose = 30
-	hidden_from_codex = TRUE
-	heating_products = null
-	heating_point = null
-	var/amount_to_zombify = 5
-
-/datum/reagent/toxin/zombie/affect_touch(var/mob/living/carbon/M, var/alien, var/removed)
-	affect_blood(M, alien, removed * 0.5)
-
-/datum/reagent/toxin/zombie/affect_blood(var/mob/living/carbon/M, var/alien, var/removed)
-	..()
-	if (istype(M, /mob/living/carbon/human))
-		var/mob/living/carbon/human/H = M
-		var/true_dose = H.chem_doses[type] + volume
-		if (true_dose >= amount_to_zombify)
-			H.zombify()
-		else if (true_dose > 1 && prob(20))
-			H.zombify()
-		else if (prob(10))
-			to_chat(H, "<span class='warning'>You feel terribly ill!</span>")
 
 /datum/reagent/toxin/bromide
 	name = "Bromide"
@@ -947,3 +929,12 @@
 	heating_products = list(/datum/reagent/acetone, /datum/reagent/carbon, /datum/reagent/ethanol)
 	heating_point = 145 CELSIUS
 	heating_message = "separates."
+
+/datum/reagent/toxin/boron
+	name = "Boron"
+	description = "A chemical that is highly valued for its potential in fusion energy."
+	taste_description = "metal"
+	reagent_state = SOLID
+	color = "#837e79"
+	value = 4
+	strength = 7

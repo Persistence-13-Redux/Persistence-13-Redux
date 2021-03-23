@@ -38,12 +38,13 @@
 	)
 
 	species_to_branch_whitelist = list(
-		/datum/species/diona      = list(/datum/mil_branch/civilian),
-		/datum/species/nabber     = list(/datum/mil_branch/civilian),
-		/datum/species/skrell     = list(/datum/mil_branch/civilian, /datum/mil_branch/expeditionary_corps, /datum/mil_branch/skrell_fleet),
-		/datum/species/unathi     = list(/datum/mil_branch/civilian, /datum/mil_branch/expeditionary_corps),
-		/datum/species/adherent   = list(/datum/mil_branch/civilian),
-		/datum/species/vox        = list(/datum/mil_branch/alien)
+		/datum/species/diona        = list(/datum/mil_branch/civilian),
+		/datum/species/nabber       = list(/datum/mil_branch/civilian),
+		/datum/species/skrell       = list(/datum/mil_branch/civilian, /datum/mil_branch/expeditionary_corps, /datum/mil_branch/skrell_fleet),
+		/datum/species/unathi       = list(/datum/mil_branch/civilian, /datum/mil_branch/expeditionary_corps),
+		/datum/species/unathi/yeosa = list(/datum/mil_branch/civilian, /datum/mil_branch/expeditionary_corps),
+		/datum/species/adherent     = list(/datum/mil_branch/civilian),
+		/datum/species/vox          = list(/datum/mil_branch/alien)
 	)
 
 	species_to_rank_blacklist = list(
@@ -82,6 +83,12 @@
 			)
 		),
 		/datum/species/unathi = list(
+			/datum/mil_branch/expeditionary_corps = list(
+				/datum/mil_rank/ec/e3,
+				/datum/mil_rank/ec/e5
+			)
+		),
+		/datum/species/unathi/yeosa = list(
 			/datum/mil_branch/expeditionary_corps = list(
 				/datum/mil_rank/ec/e3,
 				/datum/mil_rank/ec/e5
@@ -126,7 +133,8 @@
 
 	assistant_job = /datum/job/crew
 
-	min_skill = list(	SKILL_SCIENCE = SKILL_BASIC,
+	min_skill = list(	SKILL_HAULING = SKILL_BASIC,
+						SKILL_SCIENCE = SKILL_BASIC,
 						SKILL_EVA     = SKILL_BASIC)
 
 /datum/mil_branch/fleet
@@ -179,7 +187,8 @@
 	)
 
 	assistant_job = /datum/job/crew
-	min_skill = list(	SKILL_WEAPONS = SKILL_BASIC,
+	min_skill = list(	SKILL_HAULING = SKILL_BASIC,
+						SKILL_WEAPONS = SKILL_BASIC,
 						SKILL_EVA     = SKILL_BASIC)
 
 /datum/mil_branch/army

@@ -49,6 +49,9 @@ lib/*.so
 *.pyc
 __pycache__
 
+# flyway config
+flyway.conf
+
 persistence.code-workspace
 
 # ignore saved vars

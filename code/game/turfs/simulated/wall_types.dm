@@ -13,7 +13,11 @@
 
 /turf/simulated/wall/r_wall/hull
 	name = "hull"
-	color = COLOR_HULL
+	color = COLOR_SOL
+
+/turf/simulated/wall/r_wall/hull/vox
+	initial_gas = list("nitrogen" = 101.38)
+	color = COLOR_GREEN_GRAY
 
 /turf/simulated/wall/prepainted
 	paint_color = COLOR_WALL_GUNMETAL

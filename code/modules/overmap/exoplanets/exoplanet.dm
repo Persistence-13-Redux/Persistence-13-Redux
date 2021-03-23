@@ -1,7 +1,10 @@
+GLOBAL_VAR(planet_repopulation_disabled)
+
 /obj/effect/overmap/visitable/sector/exoplanet
 	name = "exoplanet"
 	icon_state = "globe"
 	in_space = 0
+	known = 1
 	var/area/planetary_area
 	var/list/seeds = list()
 	var/list/animals = list()
@@ -30,7 +33,7 @@
 	var/list/actors = list() //things that appear in engravings on xenoarch finds.
 	var/list/species = list() //list of names to use for simple animals
 
-	var/repopulating = 0
+	var/repopulating = FALSE
 	var/repopulate_types = list() // animals which have died that may come back
 
 	var/list/possible_themes = list(/datum/exoplanet_theme/mountains,/datum/exoplanet_theme)
@@ -41,21 +44,19 @@
 	//Flags deciding what features to pick
 	var/ruin_tags_whitelist
 	var/ruin_tags_blacklist
-	var/features_budget = 4
+	var/features_budget = 5
 	var/list/possible_features = list()
 	var/list/spawned_features
 
+	//Either a type or a list of types and weights. You must include all types if it's a list
+	var/list/habitability_distribution = list(HABITABILITY_IDEAL = 10, HABITABILITY_OKAY = 40, HABITABILITY_BAD = 50)
 	var/habitability_class
 
 /obj/effect/overmap/visitable/sector/exoplanet/proc/generate_habitability()
-	var/roll = rand(1,100)
-	switch(roll)
-		if(1 to 10)
-			habitability_class = HABITABILITY_IDEAL
-		if(11 to 50)
-			habitability_class = HABITABILITY_OKAY
-		else
-			habitability_class = HABITABILITY_BAD
+	if(isnum(habitability_distribution))
+		habitability_class = habitability_distribution
+	else
+		habitability_class = pickweightindex(habitability_distribution)
 
 /obj/effect/overmap/visitable/sector/exoplanet/New(nloc, max_x, max_y)
 	if(!GLOB.using_map.use_overmap)
@@ -63,9 +64,13 @@
 
 	maxx = max_x ? max_x : world.maxx
 	maxy = max_y ? max_y : world.maxy
-	planetary_area = new planetary_area()
 
-	name = "[generate_planet_name()], \a [name]"
+	var/planet_name = generate_planet_name()
+	name = "[planet_name], \a [name]"
+
+	planetary_area = new planetary_area()
+	GLOB.using_map.area_purity_test_exempt_areas += planetary_area.type
+	planetary_area.name = "Surface of [planet_name]"
 
 	world.maxz++
 	forceMove(locate(1,1,world.maxz))
@@ -110,10 +115,10 @@
 
 /obj/effect/overmap/visitable/sector/exoplanet/Process(wait, tick)
 	if(animals.len < 0.5*max_animal_count && !repopulating)
-		repopulating = 1
+		repopulating = TRUE
 		max_animal_count = round(max_animal_count * 0.5)
 	for(var/zlevel in map_z)
-		if(repopulating)
+		if(repopulating && !GLOB.planet_repopulation_disabled)
 			for(var/i = 1 to round(max_animal_count - animals.len))
 				if(prob(10))
 					var/turf/simulated/T = pick_area_turf(planetary_area, list(/proc/not_turf_contains_dense_objects))
@@ -124,7 +129,7 @@
 					GLOB.destroyed_event.register(S, src, /obj/effect/overmap/visitable/sector/exoplanet/proc/remove_animal)
 					adapt_animal(S)
 			if(animals.len >= max_animal_count)
-				repopulating = 0
+				repopulating = FALSE
 
 		if(!atmosphere)
 			continue
@@ -188,7 +193,7 @@
 				new map_type(null,1,1,zlevel,maxx,maxy,0,1,1,planetary_area)
 
 /obj/effect/overmap/visitable/sector/exoplanet/proc/generate_features()
-	spawned_features = seedRuins(map_z, features_budget, /area/exoplanet, possible_features, maxx, maxy)
+	spawned_features = seedRuins(map_z, features_budget, possible_features, /area/exoplanet, maxx, maxy)
 
 /obj/effect/overmap/visitable/sector/exoplanet/proc/get_biostuff(var/datum/random_map/noise/exoplanet/random_map)
 	if(!istype(random_map))
@@ -239,14 +244,15 @@
 			S.chems[/datum/reagent/nutriment] = nutriment
 			S.chems[chem_type] = list(rand(1,10),rand(10,20))
 
-/obj/effect/overmap/visitable/sector/exoplanet/proc/adapt_animal(var/mob/living/simple_animal/A)
-	if(species[A.type])
-		A.SetName(species[A.type])
-		A.real_name = species[A.type]
-	else
-		A.SetName("alien creature")
-		A.real_name = "alien creature"
-		A.verbs |= /mob/living/simple_animal/proc/name_species
+/obj/effect/overmap/visitable/sector/exoplanet/proc/adapt_animal(var/mob/living/simple_animal/A, setname = TRUE)
+	if (setname)
+		if(species[A.type])
+			A.SetName(species[A.type])
+			A.real_name = species[A.type]
+		else
+			A.SetName("alien creature")
+			A.real_name = "alien creature"
+			A.verbs |= /mob/living/simple_animal/proc/name_species
 	if(atmosphere)
 		//Set up gases for living things
 		if(!LAZYLEN(breathgas))
@@ -292,16 +298,16 @@
 //Tries to generate num landmarks, but avoids repeats.
 /obj/effect/overmap/visitable/sector/exoplanet/proc/generate_landing(num = 1)
 	var/places = list()
-	var/attempts = 10*num
+	var/attempts = 30*num
 	var/new_type = landmark_type
 	while(num)
 		attempts--
-		var/turf/T = locate(rand(20, maxx-20), rand(20, maxy - 10),map_z[map_z.len])
+		var/turf/T = locate(rand(20, maxx - 30), rand(20, maxy - 30),map_z[map_z.len])
 		if(!T || (T in places)) // Two landmarks on one turf is forbidden as the landmark code doesn't work with it.
 			continue
 		if(attempts >= 0) // While we have the patience, try to find better spawn points. If out of patience, put them down wherever, so long as there are no repeats.
 			var/valid = 1
-			var/list/block_to_check = block(locate(T.x - 10, T.y - 10, T.z), locate(T.x + 10, T.y + 10, T.z))
+			var/list/block_to_check = block(locate(T.x - 15, T.y - 15, T.z), locate(T.x + 15, T.y + 15, T.z))
 			for(var/turf/check in block_to_check)
 				if(!istype(get_area(check), /area/exoplanet) || check.turf_flags & TURF_FLAG_NORUINS)
 					valid = 0
@@ -470,3 +476,5 @@
 	name = "\improper Planetary surface"
 	ambience = list('sound/effects/wind/wind_2_1.ogg','sound/effects/wind/wind_2_2.ogg','sound/effects/wind/wind_3_1.ogg','sound/effects/wind/wind_4_1.ogg','sound/effects/wind/wind_4_2.ogg','sound/effects/wind/wind_5_1.ogg')
 	always_unpowered = 1
+	area_flags = AREA_FLAG_EXTERNAL
+	planetary_surface = TRUE

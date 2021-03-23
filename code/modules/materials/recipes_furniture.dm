@@ -119,7 +119,6 @@ ARMCHAIR(yellow)
 	result_type = /obj/machinery/door/unpowered/simple
 	req_amount = 10
 	time = 50
-	send_material_data = 0
 
 /datum/stack_recipe/furniture/barricade
 	title = "barricade"
@@ -129,11 +128,11 @@ ARMCHAIR(yellow)
 
 /datum/stack_recipe/furniture/stool
 	title = "stool"
-	result_type = /obj/item/weapon/stool
+	result_type = /obj/item/stool
 
 /datum/stack_recipe/furniture/bar_stool
 	title = "bar stool"
-	result_type = /obj/item/weapon/stool/bar
+	result_type = /obj/item/stool/bar
 
 /datum/stack_recipe/furniture/bed
 	title = "bed"

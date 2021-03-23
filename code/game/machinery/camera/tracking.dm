@@ -41,7 +41,7 @@
 /mob/living/silicon/ai/proc/ai_store_location(loc as text)
 	set category = "Silicon Commands"
 	set name = "Store Camera Location"
-	set desc = "Stores your current camera location by the given name"
+	set desc = "Stores your current camera location by the given name."
 
 	loc = sanitize(loc)
 	if(!loc)
@@ -70,7 +70,7 @@
 /mob/living/silicon/ai/proc/ai_goto_location(loc in sorted_stored_locations())
 	set category = "Silicon Commands"
 	set name = "Goto Camera Location"
-	set desc = "Returns to the selected camera location"
+	set desc = "Returns to the selected camera location."
 
 	if (!(loc in stored_locations))
 		to_chat(src, "<span class='warning'>Location [loc] not found</span>")
@@ -82,7 +82,7 @@
 /mob/living/silicon/ai/proc/ai_remove_location(loc in sorted_stored_locations())
 	set category = "Silicon Commands"
 	set name = "Delete Camera Location"
-	set desc = "Deletes the selected camera location"
+	set desc = "Deletes the selected camera location."
 
 	if (!(loc in stored_locations))
 		to_chat(src, "<span class='warning'>Location [loc] not found</span>")
@@ -220,7 +220,7 @@ mob/living/proc/near_camera()
 
 /mob/living/proc/tracking_status()
 	// Easy checks first.
-	var/obj/item/weapon/card/id/id = GetIdCard()
+	var/obj/item/card/id/id = GetIdCard()
 	if(id && id.prevent_tracking())
 		return TRACKING_TERMINATE
 	if(InvalidPlayerTurf(get_turf(src)))

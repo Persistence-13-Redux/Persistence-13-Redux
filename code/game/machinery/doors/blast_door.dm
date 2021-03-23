@@ -39,8 +39,8 @@
 	pry_mod = 1.35
 
 	uncreated_component_parts = list(
-		/obj/item/weapon/stock_parts/radio/receiver,
-		/obj/item/weapon/stock_parts/power/apc
+		/obj/item/stock_parts/radio/receiver,
+		/obj/item/stock_parts/power/apc
 	)
 	// To be fleshed out and moved to parent door, but staying minimal for now.
 	public_methods = list(
@@ -138,15 +138,13 @@
 // Parameters: 2 (C - Item this object was clicked with, user - Mob which clicked this object)
 // Description: If we are clicked with crowbar or wielded fire axe, try to manually open the door.
 // This only works on broken doors or doors without power. Also allows repair with Plasteel.
-/obj/machinery/door/blast/attackby(obj/item/weapon/C as obj, mob/user as mob)
+/obj/machinery/door/blast/attackby(obj/item/C as obj, mob/user as mob)
 	add_fingerprint(user, 0, C)
-	if(isCrowbar(C) || (istype(C, /obj/item/weapon/material/twohanded/fireaxe) && C:wielded == 1))
+	if(isCrowbar(C) || (istype(C, /obj/item/material/twohanded/fireaxe) && C:wielded == 1))
 		if(((stat & NOPOWER) || (stat & BROKEN)) && !( operating ))
 			to_chat(user, "<span class='notice'>You begin prying at \the [src]...</span>")
 			if(do_after(user, 2 SECONDS, src))
 				force_toggle()
-			else
-				to_chat(user, "<span class='warning'>You must remain still while working on \the [src].</span>")
 		else
 			to_chat(user, "<span class='notice'>[src]'s motors resist your effort.</span>")
 		return
@@ -209,6 +207,9 @@
 	if(air_group) return 1
 	return ..()
 
+/obj/machinery/door/blast/do_simple_ranged_interaction(var/mob/user)
+	return TRUE
+
 // Used with mass drivers to time the close.
 /obj/machinery/door/blast/proc/delayed_close()
 	set waitfor = FALSE
@@ -267,8 +268,8 @@
 /obj/machinery/door/blast/regular/escape_pod
 	name = "Escape Pod release Door"
 
-/obj/machinery/door/blast/regular/escape_pod/Process()	
-	if(evacuation_controller.emergency_evacuation && evacuation_controller.state >= EVAC_LAUNCHING && src.icon_state == icon_state_closed)		
+/obj/machinery/door/blast/regular/escape_pod/Process()
+	if(evacuation_controller.emergency_evacuation && evacuation_controller.state >= EVAC_LAUNCHING && src.icon_state == icon_state_closed)
 		src.force_open()
 	. = ..()
 
@@ -299,3 +300,8 @@
 
 /obj/machinery/door/blast/shutters/open
 	begins_closed = FALSE
+
+/obj/machinery/door/blast/shutters/attack_generic(var/mob/user, var/damage)
+	if(stat & BROKEN)
+		qdel(src)
+	..()

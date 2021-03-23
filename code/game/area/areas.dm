@@ -112,6 +112,7 @@
 		if(!all_doors)
 			return
 		for(var/obj/machinery/door/firedoor/E in all_doors)
+			E.locked = FALSE
 			if(!E.blocked)
 				if(E.operating)
 					E.nextstate = FIREDOOR_OPEN
@@ -144,6 +145,7 @@
 		if(!all_doors)
 			return
 		for(var/obj/machinery/door/firedoor/D in all_doors)
+			D.locked = FALSE
 			if(!D.blocked)
 				if(D.operating)
 					D.nextstate = FIREDOOR_OPEN
@@ -328,3 +330,8 @@ var/list/mob/living/forced_ambiance_list = new
 
 /area/proc/has_turfs()
 	return !!(locate(/turf) in src)
+
+/area/proc/can_modify_area()
+	if (src && src.area_flags & AREA_FLAG_NO_MODIFY)
+		return FALSE
+	return TRUE

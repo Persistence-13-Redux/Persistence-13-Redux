@@ -58,7 +58,7 @@
 				dat += "</ol>"
 
 
-		var/datum/browser/popup = new(user, "comm_monitor", "Autholathe", 575, 400)
+		var/datum/browser/popup = new(user, "comm_monitor", "Telecommunications Monitor", 575, 400)
 		popup.set_content(JOINTEXT(dat))
 		popup.open()
 
@@ -125,7 +125,7 @@
 /obj/machinery/computer/telecomms/monitor/emag_act(var/remaining_charges, var/mob/user)
 	if(!emagged)
 		playsound(src.loc, 'sound/effects/sparks4.ogg', 75, 1)
-		emagged = 1
+		emagged = TRUE
 		req_access.Cut()
 		to_chat(user, "<span class='notice'>You you disable the security protocols</span>")
 		src.updateUsrDialog()

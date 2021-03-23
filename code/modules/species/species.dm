@@ -94,7 +94,7 @@
 	var/vision_flags = SEE_SELF               // Same flags as glasses.
 
 	// Death vars.
-	var/meat_type =     /obj/item/weapon/reagent_containers/food/snacks/meat/human
+	var/meat_type =     /obj/item/reagent_containers/food/snacks/meat/human
 	var/meat_amount =   3
 	var/skin_material = MATERIAL_SKIN_GENERIC
 	var/skin_amount =   3
@@ -227,7 +227,7 @@
 	var/list/base_auras
 
 	var/sexybits_location	//organ tag where they are located if they can be kicked for increased pain
-	
+
 	var/job_skill_buffs = list()				// A list containing jobs (/datum/job), with values the extra points that job receives.
 
 	var/list/descriptors = list(
@@ -255,6 +255,17 @@
 		list(/decl/emote/audible/grunt, /decl/emote/audible/groan, /decl/emote/audible/moan) = 40,
 		list(/decl/emote/audible/grunt, /decl/emote/audible/groan) = 10,
 	)
+
+
+	var/exertion_effect_chance = 0
+	var/exertion_hydration_scale = 0
+	var/exertion_nutrition_scale = 0
+	var/exertion_charge_scale = 0
+	var/exertion_reagent_scale = 0
+	var/exertion_reagent_path = null
+	var/list/exertion_emotes_biological = null
+	var/list/exertion_emotes_synthetic = null
+
 /*
 These are all the things that can be adjusted for equipping stuff and
 each one can be in the NORTH, SOUTH, EAST, and WEST direction. Specify
@@ -342,12 +353,12 @@ The slots that you can use are found in items_clothing.dm and are the inventory 
 		organ_data["descriptor"] = initial(limb_path.name)
 
 /datum/species/proc/equip_survival_gear(var/mob/living/carbon/human/H,var/extendedtank = 1)
-	if(istype(H.get_equipped_item(slot_back), /obj/item/weapon/storage/backpack))
-		if (extendedtank)	H.equip_to_slot_or_del(new /obj/item/weapon/storage/box/engineer(H.back), slot_in_backpack)
-		else	H.equip_to_slot_or_del(new /obj/item/weapon/storage/box/survival(H.back), slot_in_backpack)
+	if(istype(H.get_equipped_item(slot_back), /obj/item/storage/backpack))
+		if (extendedtank)	H.equip_to_slot_or_del(new /obj/item/storage/box/engineer(H.back), slot_in_backpack)
+		else	H.equip_to_slot_or_del(new /obj/item/storage/box/survival(H.back), slot_in_backpack)
 	else
-		if (extendedtank)	H.equip_to_slot_or_del(new /obj/item/weapon/storage/box/engineer(H), slot_r_hand)
-		else	H.equip_to_slot_or_del(new /obj/item/weapon/storage/box/survival(H), slot_r_hand)
+		if (extendedtank)	H.equip_to_slot_or_del(new /obj/item/storage/box/engineer(H), slot_r_hand)
+		else	H.equip_to_slot_or_del(new /obj/item/storage/box/survival(H), slot_r_hand)
 
 /datum/species/proc/create_organs(var/mob/living/carbon/human/H) //Handles creation of mob organs.
 
@@ -613,6 +624,7 @@ The slots that you can use are found in items_clothing.dm and are the inventory 
 
 	var/skill_mod = 10 * attacker.get_skill_difference(SKILL_COMBAT, target)
 	var/state_mod = attacker.melee_accuracy_mods() - target.melee_accuracy_mods()
+	var/stim_mod = target.chem_effects[CE_STIMULANT]
 	var/push_mod = min(max(1 + attacker.get_skill_difference(SKILL_COMBAT, target), 1), 3)
 	if(target.a_intent == I_HELP)
 		state_mod -= 30
@@ -622,8 +634,8 @@ The slots that you can use are found in items_clothing.dm and are the inventory 
 		if(prob(hurt_prob) && I.on_disarm_attempt(target, attacker))
 			return
 
-	var/randn = rand(1, 100) - skill_mod + state_mod
-	if(!(check_no_slip(target)) && randn <= 25)
+	var/randn = rand(1, 100) - skill_mod + state_mod - stim_mod
+	if(!(check_no_slip(target)) && randn <= 20)
 		var/armor_check = 100 * target.get_blocked_ratio(affecting, BRUTE, damage = 20)
 		target.apply_effect(push_mod, WEAKEN, armor_check)
 		playsound(target.loc, 'sound/weapons/thudswoosh.ogg', 50, 1, -1)
@@ -633,7 +645,7 @@ The slots that you can use are found in items_clothing.dm and are the inventory 
 			target.visible_message("<span class='warning'>[attacker] attempted to push [target]!</span>")
 		return
 
-	if(randn <= 60)
+	if(randn <= 50)
 		//See about breaking grips or pulls
 		if(target.break_all_grabs(attacker))
 			playsound(target.loc, 'sound/weapons/thudswoosh.ogg', 50, 1, -1)
@@ -764,8 +776,9 @@ The slots that you can use are found in items_clothing.dm and are the inventory 
 					dat += "</br><b>Vulnerable to [kind].</b>"
 				else if(damage_types[kind] < 1)
 					dat += "</br><b>Resistant to [kind].</b>"
-			dat += "</br><b>They breathe [gas_data.name[breath_type]].</b>"
-			dat += "</br><b>They exhale [gas_data.name[exhale_type]].</b>"
+			if(has_organ[breathing_organ])
+				dat += "</br><b>They breathe [gas_data.name[breath_type]].</b>"
+				dat += "</br><b>They exhale [gas_data.name[exhale_type]].</b>"
 			if(LAZYLEN(poison_types))
 				dat += "</br><b>[capitalize(english_list(poison_types))] [LAZYLEN(poison_types) == 1 ? "is" : "are"] poisonous to them.</b>"
 			dat += "</small>"
@@ -783,9 +796,9 @@ The slots that you can use are found in items_clothing.dm and are the inventory 
 
 /datum/species/proc/skills_from_age(age)	//Converts an age into a skill point allocation modifier. Can be used to give skill point bonuses/penalities not depending on job.
 	switch(age)
-		if(0 to 22) 	. = -4
-		if(23 to 30) 	. = 0
-		if(31 to 45)	. = 4
+		if(0 to 22) 	. = 0
+		if(23 to 30) 	. = 3
+		if(31 to 45)	. = 6
 		else			. = 8
 
 /datum/species/proc/post_organ_rejuvenate(var/obj/item/organ/org, var/mob/living/carbon/human/H)
@@ -805,3 +818,27 @@ The slots that you can use are found in items_clothing.dm and are the inventory 
 			// This assumes that if a pain-level has been defined it also has a list of emotes to go with it
 			var/decl/emote/E = decls_repository.get_decl(pick(pain_emotes))
 			return E.key
+
+/datum/species/proc/handle_exertion(mob/living/carbon/human/H)
+	if (!exertion_effect_chance)
+		return
+	var/chance = exertion_effect_chance * H.encumbrance()
+	if (chance && prob(H.skill_fail_chance(SKILL_HAULING, chance)))
+		var/synthetic = H.isSynthetic()
+		if (synthetic)
+			if (exertion_charge_scale)
+				var/obj/item/organ/internal/cell/cell = locate() in H.internal_organs
+				if (cell)
+					cell.use(cell.get_power_drain() * exertion_charge_scale)
+		else
+			if (exertion_hydration_scale)
+				H.adjust_hydration(-DEFAULT_THIRST_FACTOR * exertion_hydration_scale)
+			if (exertion_nutrition_scale)
+				H.adjust_nutrition(-DEFAULT_HUNGER_FACTOR * exertion_nutrition_scale)
+			if (exertion_reagent_scale && !isnull(exertion_reagent_path))
+				H.make_reagent(REM * exertion_reagent_scale, exertion_reagent_path)
+		if (prob(10))
+			var/list/active_emotes = synthetic ? exertion_emotes_synthetic : exertion_emotes_biological
+			var/decl/emote/exertion_emote = decls_repository.get_decl(pick(active_emotes))
+			if (exertion_emote)
+				exertion_emote.do_emote(H)

@@ -416,9 +416,9 @@
 	w_class = ITEM_SIZE_LARGE
 	obj_flags = OBJ_FLAG_CONDUCTIBLE | OBJ_FLAG_ROTATABLE
 
-	flashlight_max_bright = 1
-	flashlight_inner_range = 3
-	flashlight_outer_range = 7
+	flashlight_max_bright = 0.8
+	flashlight_inner_range = 1
+	flashlight_outer_range = 5
 
 /obj/item/device/flashlight/lamp/floodlamp/green
 	icon_state = "greenfloodlamp"
@@ -445,30 +445,30 @@
 	light_color = COLOR_RED
 
 /obj/item/device/flashlight/lamp/lava/blue
-	desc = "A kitchy blue decorative light"
+	desc = "A kitchy blue decorative light."
 	light_color = COLOR_BLUE
 
 /obj/item/device/flashlight/lamp/lava/cyan
-	desc = "A kitchy cyan decorative light"
+	desc = "A kitchy cyan decorative light."
 	light_color = COLOR_CYAN
 
 /obj/item/device/flashlight/lamp/lava/green
-	desc = "A kitchy green decorative light"
+	desc = "A kitchy green decorative light."
 	light_color = COLOR_GREEN
 
 /obj/item/device/flashlight/lamp/lava/orange
-	desc = "A kitchy orange decorative light"
+	desc = "A kitchy orange decorative light."
 	light_color = COLOR_ORANGE
 
 /obj/item/device/flashlight/lamp/lava/purple
-	desc = "A kitchy purple decorative light"
+	desc = "A kitchy purple decorative light."
 	light_color = COLOR_PURPLE
 /obj/item/device/flashlight/lamp/lava/pink
-	desc = "A kitchy pink decorative light"
+	desc = "A kitchy pink decorative light."
 	light_color = COLOR_PINK
 
 /obj/item/device/flashlight/lamp/lava/yellow
-	desc = "A kitchy yellow decorative light"
+	desc = "A kitchy yellow decorative light."
 	light_color = COLOR_YELLOW
 
 #undef FLASHLIGHT_ALWAYS_ON

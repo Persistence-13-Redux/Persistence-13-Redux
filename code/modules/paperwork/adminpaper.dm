@@ -1,5 +1,5 @@
 //Adminpaper - it's like paper, but more adminny!
-/obj/item/weapon/paper/admin
+/obj/item/paper/admin
 	name = "administrative paper"
 	desc = "If you see this, something has gone horribly wrong."
 	var/datum/admins/admindatum = null
@@ -19,12 +19,14 @@
 	var/logo_list = list("sollogo.png","eclogo.png","fleetlogo.png","exologo.png","ntlogo.png","daislogo.png","xynlogo.png","terralogo.png", "sfplogo.png")
 	var/logo = ""
 
-/obj/item/weapon/paper/admin/New()
+	var/unformatedText = ""
+
+/obj/item/paper/admin/New()
 	..()
 	generateInteractions()
 
 
-/obj/item/weapon/paper/admin/proc/generateInteractions()
+/obj/item/paper/admin/proc/generateInteractions()
 	//clear first
 	interactions = null
 
@@ -40,7 +42,7 @@
 	interactions += "<A href='?src=\ref[src];clear=1'>Clear page</A> "
 	interactions += "</center>"
 
-/obj/item/weapon/paper/admin/proc/generateHeader()
+/obj/item/paper/admin/proc/generateHeader()
 	var/originhash = md5("[origin]")
 	var/challengehash = copytext(md5("[game_id]"),1,10) // changed to a hash of the game ID so it's more consistant but changes every round.
 	var/text = null
@@ -52,7 +54,7 @@
 
 	header = text
 
-/obj/item/weapon/paper/admin/proc/generateFooter()
+/obj/item/paper/admin/proc/generateFooter()
 	var/text = null
 
 	text = "<hr><font size= \"1\">"
@@ -64,30 +66,29 @@
 	footer = text
 
 
-/obj/item/weapon/paper/admin/proc/adminbrowse()
+/obj/item/paper/admin/proc/adminbrowse()
 	updateinfolinks()
 	generateHeader()
 	generateFooter()
 	updateDisplay()
 
-obj/item/weapon/paper/admin/proc/updateDisplay()
+obj/item/paper/admin/proc/updateDisplay()
 	show_browser(usr, "<HTML><HEAD><TITLE>[name]</TITLE></HEAD><BODY>[headerOn ? header : ""][info_links][stamps][footerOn ? footer : ""][interactions]</BODY></HTML>", "window=[name];can_close=0")
 
 
 
-/obj/item/weapon/paper/admin/Topic(href, href_list)
+/obj/item/paper/admin/Topic(href, href_list)
 	if(href_list["write"])
 		var/id = href_list["write"]
-		if(free_space <= 0)
-			to_chat(usr, "<span class='info'>There isn't enough space left on \the [src] to write anything.</span>")
-			return
 
-		var/t =  sanitize(input("Enter what you want to write:", "Write", null, null) as message, free_space, extra = 0)
+		var/t =  sanitize(input("Enter what you want to write:", "Write", unformatedText, null) as message, MAX_PAPER_MESSAGE_LEN, extra = 0)
 
 		if(!t)
 			return
 
 		var last_fields_value = fields
+
+		unformatedText = t
 
 		//t = html_encode(t)
 		t = replacetext(t, "\n", "<BR>")
@@ -102,10 +103,11 @@ obj/item/weapon/paper/admin/proc/updateDisplay()
 		if(id!="end")
 			addtofield(text2num(id), t) // He wants to edit a field, let him.
 		else
-			info += t // Oh, he wants to edit to the end of the file, let him.
+			info = t // set the file to the new text
 			updateinfolinks()
 
-		update_space(t)
+		//manualy set freespace
+		free_space = MAX_PAPER_MESSAGE_LEN - length(strip_html_properly(t))
 
 		updateDisplay()
 
@@ -156,5 +158,5 @@ obj/item/weapon/paper/admin/proc/updateDisplay()
 		updateDisplay()
 		return
 
-/obj/item/weapon/paper/admin/get_signature()
+/obj/item/paper/admin/get_signature()
 	return input(usr, "Enter the name you wish to sign the paper with (will prompt for multiple entries, in order of entry)", "Signature") as text|null

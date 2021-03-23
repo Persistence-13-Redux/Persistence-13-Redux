@@ -56,6 +56,7 @@ NOTE: there are two lists of areas in the end of this file: centcom and station 
 	var/list/forced_ambience = null
 	var/sound_env = STANDARD_STATION
 	var/turf/base_turf //The base turf type of the area, which can be used to override the z-level's base turf
+	var/planetary_surface = FALSE // true if the area belongs to a planet.
 
 /*-----------------------------------------------------------------------------*/
 
@@ -118,16 +119,6 @@ area/space/atmosalert()
 
 /area/medical
 	req_access = list(access_medical)
-
-/area/medical/virology
-	name = "\improper Virology"
-	icon_state = "virology"
-	req_access = list(access_virology)
-
-/area/medical/virologyaccess
-	name = "\improper Virology Access"
-	icon_state = "virology"
-	req_access = list() // This is like the lobby, needs low access to allow passing through in a different direction.
 
 /area/security
 	req_access = list(access_sec_doors)

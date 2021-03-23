@@ -17,6 +17,16 @@
 		TAG_CULTURE = CULTURE_ALIUM
 	)
 
+	exertion_effect_chance = 10
+	exertion_hydration_scale = 1
+	exertion_reagent_scale = 5
+	exertion_reagent_path = /datum/reagent/lactate
+	exertion_emotes_biological = list(
+		/decl/emote/exertion/biological,
+		/decl/emote/exertion/biological/breath,
+		/decl/emote/exertion/biological/pant
+	)
+
 /datum/species/alium/New()
 	//Coloring
 	blood_color = RANDOM_RGB
@@ -129,7 +139,7 @@
 	desc = "Your true form is calling. Use this to become an alien humanoid."
 	icon = 'icons/obj/xenoarchaeology.dmi'
 	icon_state = "ano51"
-	anchored = 1
+	anchored = TRUE
 
 /obj/structure/aliumizer/attack_hand(mob/living/carbon/human/user)
 	if(!istype(user))
@@ -145,7 +155,7 @@
 		return
 	to_chat(user, "You're now an alien humanoid of some undiscovered species. Make up what lore you want, no one knows a thing about your species! You can check info about your traits with Check Species Info verb in IC tab.")
 	to_chat(user, "You can't speak GalCom or any other languages by default. You can use translator implant that spawns on top of this monolith - it will give you knowledge of any language if you hear it enough times.")
-	new/obj/item/weapon/implanter/translator(get_turf(src))
+	new/obj/item/implanter/translator(get_turf(src))
 	user.set_species(SPECIES_ALIEN)
 	var/decl/cultural_info/culture = user.get_cultural_value(TAG_CULTURE)
 	user.fully_replace_character_name(culture.get_random_name(user.gender))

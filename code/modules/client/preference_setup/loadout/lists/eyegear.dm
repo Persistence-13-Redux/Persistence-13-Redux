@@ -12,7 +12,7 @@
 	path = /obj/item/clothing/glasses/eyepatch
 
 /datum/gear/eyes/fashionglasses
-	display_name = "glasses"
+	display_name = "non-prescription glasses"
 	path = /obj/item/clothing/glasses
 
 /datum/gear/eyes/fashionglasses/New()
@@ -31,6 +31,11 @@
 /datum/gear/eyes/sciencegoggles/prescription
 	display_name = "Science Goggles, prescription"
 	path = /obj/item/clothing/glasses/science/prescription
+
+/datum/gear/eyes/sciencegoggles/hud
+	display_name = "Science HUD"
+	path = /obj/item/clothing/glasses/hud/science
+
 /datum/gear/eyes/security
 	display_name = "Security HUD"
 	path = /obj/item/clothing/glasses/hud/security

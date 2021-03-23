@@ -9,7 +9,7 @@
 	interests, rampant cyber and bio-augmentation and secretive factions make life on most human \
 	worlds tumultous at best."
 	assisted_langs = list(LANGUAGE_NABBER)
-	min_age = 17
+	min_age = 18
 	max_age = 100
 	hidden_from_codex = FALSE
 	bandages_icon = 'icons/mob/bandage.dmi'
@@ -38,6 +38,21 @@
 			CULTURE_HUMAN_CONFED,
 			CULTURE_HUMAN_OTHER
 		)
+	)
+
+	exertion_effect_chance = 10
+	exertion_hydration_scale = 1
+	exertion_charge_scale = 1
+	exertion_reagent_scale = 5
+	exertion_reagent_path = /datum/reagent/lactate
+	exertion_emotes_biological = list(
+		/decl/emote/exertion/biological,
+		/decl/emote/exertion/biological/breath,
+		/decl/emote/exertion/biological/pant
+	)
+	exertion_emotes_synthetic = list(
+		/decl/emote/exertion/synthetic,
+		/decl/emote/exertion/synthetic/creak
 	)
 
 /datum/species/human/get_bodytype(var/mob/living/carbon/human/H)
@@ -108,7 +123,7 @@
 	the secrets of their empire to their allies."
 	assisted_langs = list(LANGUAGE_NABBER)
 	health_hud_intensity = 1.75
-	meat_type = /obj/item/weapon/reagent_containers/food/snacks/fish/octopus
+	meat_type = /obj/item/reagent_containers/food/snacks/fish/octopus
 	bone_material = MATERIAL_BONE_CARTILAGE
 	genders = list(PLURAL)
 	hidden_from_codex = FALSE
@@ -205,6 +220,32 @@
 		BP_EYES =     /obj/item/organ/internal/eyes/skrell
 		)
 
+	exertion_effect_chance = 10
+	exertion_hydration_scale = 1
+	exertion_charge_scale = 1
+	exertion_reagent_scale = 5
+	exertion_reagent_path = /datum/reagent/lactate
+	exertion_emotes_biological = list(
+		/decl/emote/exertion/biological,
+		/decl/emote/exertion/biological/breath,
+		/decl/emote/exertion/biological/pant
+	)
+	exertion_emotes_synthetic = list(
+		/decl/emote/exertion/synthetic,
+		/decl/emote/exertion/synthetic/creak
+	)
+
+
+/datum/species/skrell/proc/handle_protein(mob/living/carbon/human/M, datum/reagent/protein)
+	var/effective_dose = M.chem_doses[protein.type] * protein.protein_amount
+	if (effective_dose > 20)
+		M.adjustToxLoss(Clamp((effective_dose - 20) / 4, 2, 10))
+		M.vomit(8, 3, rand(1 SECONDS, 5 SECONDS))
+	else if (effective_dose > 10)
+		M.vomit(4, 2, rand(3 SECONDS, 10 SECONDS))
+	else
+		M.vomit(1, 1, rand(5 SECONDS, 15 SECONDS))	
+
 /datum/species/skrell/get_sex(var/mob/living/carbon/human/H)
 	return istype(H) && (H.descriptors["headtail length"] == 1 ? MALE : FEMALE)
 
@@ -277,14 +318,16 @@
 
 	warning_low_pressure = 50
 	hazard_low_pressure = -1
+	warning_high_pressure = 1500
+	hazard_high_pressure = 2000
 
-	cold_level_1 = 50
+	cold_level_1 = -1
 	cold_level_2 = -1
 	cold_level_3 = -1
 
-	heat_level_1 = 2000
-	heat_level_2 = 3000
-	heat_level_3 = 4000
+	heat_level_1 = 3000
+	heat_level_2 = 4000
+	heat_level_3 = 5000
 
 	body_temperature = T0C + 15		//make the plant people have a bit lower body temperature, why not
 
@@ -305,24 +348,19 @@
 		TAG_RELIGION =  list(RELIGION_OTHER)
 	)
 
-/proc/spawn_diona_nymph(var/turf/target)
-	if(!istype(target))
-		return 0
+/proc/spawn_diona_nymph(turf/target)
+	if (!istype(target))
+		return
+	var/mob/living/carbon/alien/diona/nymph = new (target)
+	var/datum/ghosttrap/trap = get_ghost_trap("living plant")
+	trap.request_player(nymph, "A diona nymph has split from its gestalt.", 30 SECONDS)
+	addtimer(CALLBACK(nymph, /mob/living/carbon/alien/diona/proc/check_spawn_death), 30 SECONDS)
 
-	//This is a terrible hack and I should be ashamed.
-	var/datum/seed/diona = SSplants.seeds["diona"]
-	if(!diona)
-		return 0
-
-	spawn(1) // So it has time to be thrown about by the gib() proc.
-		var/mob/living/carbon/alien/diona/D = new(target)
-		var/datum/ghosttrap/plant/P = get_ghost_trap("living plant")
-		P.request_player(D, "A diona nymph has split off from its gestalt. ")
-		spawn(60)
-			if(D)
-				if(!D.ckey || !D.client)
-					D.death()
-		return 1
+/mob/living/carbon/alien/diona/proc/check_spawn_death()
+	if (QDELETED(src))
+		return
+	if (!ckey || !client)
+		death()
 
 #define DIONA_LIMB_DEATH_COUNT 9
 /datum/species/diona/handle_death_check(var/mob/living/carbon/human/H)
@@ -343,7 +381,7 @@
 	return 0
 
 /datum/species/diona/equip_survival_gear(var/mob/living/carbon/human/H)
-	if(istype(H.get_equipped_item(slot_back), /obj/item/weapon/storage/backpack))
+	if(istype(H.get_equipped_item(slot_back), /obj/item/storage/backpack))
 		H.equip_to_slot_or_del(new /obj/item/device/flashlight/flare(H.back), slot_in_backpack)
 	else
 		H.equip_to_slot_or_del(new /obj/item/device/flashlight/flare(H), slot_r_hand)

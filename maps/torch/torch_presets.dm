@@ -139,13 +139,13 @@ var/const/NETWORK_NANOTRASEN  = "Petrov"
 
 // Substation SMES
 /obj/machinery/power/smes/buildable/preset/torch/substation
-	uncreated_component_parts = list(/obj/item/weapon/stock_parts/smes_coil = 1) // Note that it gets one more from construction
+	uncreated_component_parts = list(/obj/item/stock_parts/smes_coil = 1) // Note that it gets one more from construction
 	_input_maxed = TRUE
 	_output_maxed = TRUE
 
 // Substation SMES (charged and with full I/O setting)
 /obj/machinery/power/smes/buildable/preset/torch/substation_full
-	uncreated_component_parts = list(/obj/item/weapon/stock_parts/smes_coil = 1)
+	uncreated_component_parts = list(/obj/item/stock_parts/smes_coil = 1)
 	_input_maxed = TRUE
 	_output_maxed = TRUE
 	_input_on = TRUE
@@ -155,8 +155,8 @@ var/const/NETWORK_NANOTRASEN  = "Petrov"
 // Main Engine output SMES
 /obj/machinery/power/smes/buildable/preset/torch/engine_main
 	uncreated_component_parts = list(
-		/obj/item/weapon/stock_parts/smes_coil/super_io = 2,
-		/obj/item/weapon/stock_parts/smes_coil/super_capacity = 2)
+		/obj/item/stock_parts/smes_coil/super_io = 2,
+		/obj/item/stock_parts/smes_coil/super_capacity = 2)
 	_input_maxed = TRUE
 	_output_maxed = TRUE
 	_input_on = TRUE
@@ -166,8 +166,8 @@ var/const/NETWORK_NANOTRASEN  = "Petrov"
 // Shuttle SMES
 /obj/machinery/power/smes/buildable/preset/torch/shuttle
 	uncreated_component_parts = list(
-		/obj/item/weapon/stock_parts/smes_coil/super_io = 1,
-		/obj/item/weapon/stock_parts/smes_coil/super_capacity = 1)
+		/obj/item/stock_parts/smes_coil/super_io = 1,
+		/obj/item/stock_parts/smes_coil/super_capacity = 1)
 	_input_maxed = TRUE
 	_output_maxed = TRUE
 	_input_on = TRUE
@@ -177,7 +177,7 @@ var/const/NETWORK_NANOTRASEN  = "Petrov"
 // Hangar SMES. Charges the shuttles so needs a pretty big throughput.
 /obj/machinery/power/smes/buildable/preset/torch/hangar
 	uncreated_component_parts = list(
-		/obj/item/weapon/stock_parts/smes_coil/super_io = 2)
+		/obj/item/stock_parts/smes_coil/super_io = 2)
 	_input_maxed = TRUE
 	_output_maxed = TRUE
 	_input_on = TRUE
@@ -201,16 +201,17 @@ var/const/NETWORK_ENGINEERING_OUTPOST = "Engineering Outpost"
 		num2text(AI_FREQ)    = list(access_synth),
 		num2text(ENT_FREQ)   = list(),
 		num2text(ERT_FREQ)   = list(access_cent_specops),
-		num2text(COMM_FREQ)  = list(access_heads),
-		num2text(ENG_FREQ)   = list(access_engine_equip, access_atmospherics),
-		num2text(MED_FREQ)   = list(access_medical_equip),
-		num2text(MED_I_FREQ) = list(access_medical_equip),
-		num2text(SEC_FREQ)   = list(access_security),
-		num2text(SEC_I_FREQ) = list(access_security),
-		num2text(SCI_FREQ)   = list(access_tox, access_robotics, access_xenobiology, access_pathfinder),
-		num2text(SUP_FREQ)   = list(access_cargo),
-		num2text(SRV_FREQ)   = list(access_janitor, access_hydroponics),
-		num2text(EXP_FREQ)   = list(access_explorer, access_rd)
+		num2text(COMM_FREQ)  = list(access_radio_comm),
+		num2text(ENG_FREQ)   = list(access_radio_eng),
+		num2text(MED_FREQ)   = list(access_radio_med),
+		num2text(MED_I_FREQ) = list(access_radio_med),
+		num2text(SEC_FREQ)   = list(access_radio_sec),
+		num2text(SEC_I_FREQ) = list(access_radio_sec),
+		num2text(SCI_FREQ)   = list(access_radio_sci),
+		num2text(SUP_FREQ)   = list(access_radio_sup),
+		num2text(SRV_FREQ)   = list(access_radio_serv),
+		num2text(EXP_FREQ)   = list(access_radio_exp),
+		num2text(HAIL_FREQ)  = list(),
 	)
 
 /decl/stock_part_preset/radio/receiver/vent_pump/guppy

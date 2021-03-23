@@ -17,7 +17,8 @@ var/list/department_radio_keys = list(
 	  ":p" = "AI Private",	".p" = "AI Private",
 	  ":z" = "Entertainment",".z" = "Entertainment",
 	  ":y" = "Exploration",		".y" = "Exploration",
-	  ":k" = "Recon",		".k" = "Recon",	//Skrell Recon ship
+	  ":o" = "Response Team",".o" = "Response Team", //ERT
+	  ":j" = "Hailing", ".j" = "Hailing",
 
 	  ":R" = "right ear",	".R" = "right ear",
 	  ":L" = "left ear",	".L" = "left ear",
@@ -36,6 +37,8 @@ var/list/department_radio_keys = list(
 	  ":P" = "AI Private",	".P" = "AI Private",
 	  ":Z" = "Entertainment",".Z" = "Entertainment",
 	  ":Y" = "Exploration",		".Y" = "Exploration",
+	  ":O" = "Response Team", ".O" = "Response Team",
+	  ":J" = "Hailing", ".J" = "Hailing",
 
 	  //kinda localization -- rastaf0
 	  //same keys as above, but on russian keyboard layout. This file uses cp1251 as encoding.
@@ -148,7 +151,7 @@ proc/get_radio_key_from_channel(var/channel)
 	message = html_decode(message)
 
 	var/end_char = copytext(message, length(message), length(message) + 1)
-	if(!(end_char in list(".", "?", "!", "-", "~")))
+	if(!(end_char in list(".", "?", "!", "-", "~", ":")))
 		message += "."
 
 	return html_encode(message)
@@ -207,6 +210,7 @@ proc/get_radio_key_from_channel(var/channel)
 	message = trim_left(message)
 	message = handle_autohiss(message, speaking)
 	message = format_say_message(message)
+	message = process_chat_markup(message)
 
 	if(speaking && !speaking.can_be_spoken_properly_by(src))
 		message = speaking.muddle(message)
@@ -242,7 +246,7 @@ proc/get_radio_key_from_channel(var/channel)
 		if(speaking)
 			message_range = speaking.get_talkinto_msg_range(message)
 		if(!speaking || !(speaking.flags & NO_TALK_MSG))
-			src.visible_message(SPAN_NOTICE("\The [src] talks into \the [used_radios[1]]."), SPAN_NOTICE("You hear someone talk into their headset."), 5, exclude_mobs = list(src))
+			src.visible_message(SPAN_NOTICE("\The [src] talks into \the [used_radios[1]]."), blind_message = SPAN_NOTICE("You hear someone talk into their headset."), range = 5, exclude_mobs = list(src))
 			if (speech_sound)
 				sound_vol *= 0.5
 
@@ -278,6 +282,7 @@ proc/get_radio_key_from_channel(var/channel)
 	var/image/speech_bubble = image('icons/mob/talk.dmi',src,"h[speech_bubble_test]")
 	speech_bubble.layer = layer
 	speech_bubble.plane = plane
+	speech_bubble.alpha = 0
 	// VOREStation Port - Attempt Multi-Z Talking
 	// for (var/atom/movable/AM in get_above_oo())
 	// 	var/turf/ST = get_turf(AM)
@@ -319,12 +324,16 @@ proc/get_radio_key_from_channel(var/channel)
 				if(O) //It's possible that it could be deleted in the meantime.
 					O.hear_talk(src, stars(message), verb, speaking)
 
-	flick_overlay(speech_bubble, speech_bubble_recipients, 30)
-
 	if(whispering)
 		log_whisper("[name]/[key] : [message]")
 	else
 		log_say("[name]/[key] : [message]")
+
+	flick_overlay(speech_bubble, speech_bubble_recipients, 50)
+	animate(speech_bubble, alpha = 255, time = 10, easing = CIRCULAR_EASING)
+	animate(time = 20)
+	animate(alpha = 0, pixel_y = 12, time = 20, easing = CIRCULAR_EASING)
+
 	return 1
 
 /mob/living/proc/say_signlang(var/message, var/verb="gestures", var/datum/language/language)

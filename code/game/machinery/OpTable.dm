@@ -3,8 +3,8 @@
 	desc = "Used for advanced medical procedures."
 	icon = 'icons/obj/surgery.dmi'
 	icon_state = "table2-idle"
-	density = 1
-	anchored = 1
+	density = TRUE
+	anchored = TRUE
 	throwpass = 1
 	idle_power_usage = 1
 	active_power_usage = 5
@@ -16,6 +16,7 @@
 	var/mob/living/carbon/human/victim = null
 	var/strapped = 0.0
 	var/obj/machinery/computer/operating/computer = null
+	var/obj/machinery/vitals_monitor/connected_monitor = null
 
 /obj/machinery/optable/Initialize()
 	. = ..()
@@ -25,6 +26,13 @@
 			computer.table = src
 			break
 
+/obj/machinery/optable/Destroy()
+	victim = null
+	if(connected_monitor)
+		connected_monitor.update_victim()
+		connected_monitor.update_optable()
+	. = ..()
+	
 /obj/machinery/optable/examine(mob/user)
 	. = ..()
 	to_chat(user, "<span class='notice'>The neural suppressors are switched [suppressing ? "on" : "off"].</span>")
@@ -91,22 +99,23 @@
 		return 0
 
 
-/obj/machinery/optable/MouseDrop_T(obj/O as obj, mob/user as mob)
-	if ((!( istype(O, /obj/item/weapon) ) || user.get_active_hand() != O))
-		return
-	if(!user.unequip_item())
-		return
-	if (O.loc != src.loc)
-		step(O, get_dir(O, src))
+/obj/machinery/optable/MouseDrop_T(mob/target, mob/user)
+	if (target.loc != loc)
+		step(target, get_dir(target, loc))
+	..()
 
 /obj/machinery/optable/proc/check_victim()
 	if(!victim || !victim.lying || victim.loc != loc)
 		suppressing = FALSE
 		victim = null
+		if(connected_monitor)
+			connected_monitor.update_victim()
 		if(locate(/mob/living/carbon/human) in loc)
 			for(var/mob/living/carbon/human/H in loc)
 				if(H.lying)
 					victim = H
+					if(connected_monitor)
+						connected_monitor.update_victim(H)
 					break
 	icon_state = (victim && victim.pulse()) ? "table2-active" : "table2-idle"
 	if(victim)
@@ -126,12 +135,14 @@
 	if (C.client)
 		C.client.perspective = EYE_PERSPECTIVE
 		C.client.eye = src
-	C.resting = 1
+	C.Weaken(5)
 	C.dropInto(loc)
 	src.add_fingerprint(user)
 	if(ishuman(C))
 		var/mob/living/carbon/human/H = C
 		src.victim = H
+		if(connected_monitor)
+			connected_monitor.update_victim(H)
 		icon_state = H.pulse() ? "table2-active" : "table2-idle"
 	else
 		icon_state = "table2-idle"
